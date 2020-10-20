@@ -246,7 +246,7 @@ try:
     for line in stdout.readlines():
         print line
         splitLine = line.split()
-        if NAME == splitLine[1]:
+        if NAME == splitLine[0]:
             VMID = splitLine[0]
             print "ERROR: VM " + NAME + " already exists."
             ErrorMessages += " VM " + NAME + " already exists."
