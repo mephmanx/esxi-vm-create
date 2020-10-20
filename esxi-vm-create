@@ -9,6 +9,7 @@ import re                         # For regex
 import paramiko                   # For remote ssh
 import yaml
 import warnings
+import traceback
 
 from esxi_vm_functions import *
 
@@ -150,7 +151,8 @@ try:
     if re.match("Version", str(stdout.readlines())) is not None:
         print "Unable to determine if this is a ESXi Host: %s, username: %s" % (HOST, USER)
         sys.exit(1)
-except:
+except Exception as e:
+    traceback.print_exc()
     print "The Error is " + str(sys.exc_info()[0])
     print "Unable to access ESXi Host: %s, username: %s" % (HOST, USER)
     sys.exit(1)
@@ -166,7 +168,8 @@ try:
         splitLine = line.split()
         VOLUMES[splitLine[0]] = splitLine[1]
         LeastUsedDS = splitLine[1]
-except:
+except Exception as e:
+    traceback.print_exc()
     print "The Error is " + str(sys.exc_info()[0])
     sys.exit(1)
 
@@ -184,7 +187,8 @@ try:
     for line in stdout.readlines():
         splitLine = re.split(',|\n', line)
         VMNICS.append(splitLine[0])
-except:
+except Exception as e:
+    traceback.print_exc()
     print "The Error is " + str(sys.exc_info()[0])
     sys.exit(1)
 
@@ -227,7 +231,8 @@ if ISO != "":
         if stdout.readlines() and not stderr.readlines():
             ISOfound = True
 
-    except:
+    except Exception as e:
+        traceback.print_exc()
         print "The Error is " + str(sys.exc_info()[0])
         sys.exit(1)
 
@@ -245,7 +250,8 @@ try:
             print "ERROR: VM " + NAME + " already exists."
             ErrorMessages += " VM " + NAME + " already exists."
             CheckHasErrors = True
-except:
+except Exception as e:
+    traceback.print_exc()
         print "The Error is " + str(sys.exc_info()[0])
         sys.exit(1)
 
@@ -308,7 +314,8 @@ try:
         print "ERROR: Directory " + FullPath + " already exists."
         ErrorMessages += " Directory " + FullPath + " already exists."
         CheckHasErrors = True
-except:
+except Exception as e:
+    traceback.print_exc()
     pass
 
 #
@@ -367,7 +374,8 @@ if NET != "None":
 for VMXopt in VMXOPTS:
     try:
         k,v = VMXopt.split("=")
-    except:
+    except Exception as e:
+        traceback.print_exc()
         k=""
         v=""
     key = k.lstrip().strip()
@@ -375,7 +383,8 @@ for VMXopt in VMXOPTS:
     for i in VMX:
         try:
             ikey,ivalue = i.split("=")
-        except:
+        except Exception as e:
+            traceback.print_exc()
             break
         if ikey.lstrip().strip().lower() == key.lower():
             index = VMX.index(i)
@@ -437,7 +446,8 @@ if not isDryRun and not CheckHasErrors:
             type(stdin)
             GeneratedMAC = str(stdout.readlines()[0]).strip('\n"')
 
-    except:
+    except Exception as e:
+        traceback.print_exc()
         print "There was an error creating the VM."
         ErrorMessages += " There was an error creating the VM."
         Result = "Fail"
@@ -471,7 +481,8 @@ LogOutput += '}\n'
 try:
     with open(LOG, "a+w") as FD:
         FD.write(LogOutput)
-except:
+except Exception as e:
+    traceback.print_exc()
     print "Error writing to log file: " + LOG
 
 if isSummary:
