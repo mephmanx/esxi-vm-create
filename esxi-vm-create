@@ -60,7 +60,7 @@ parser.add_argument("-m", "--mem", type=int, help="Memory in GB  (" + str(MEM) +
 parser.add_argument("-v", "--vdisk", dest='HDISK', type=str, help="Size of virt hdisk  (" + str(HDISK) + ")")
 parser.add_argument("-i", "--iso", dest='ISO', type=str, help="CDROM ISO Path | None  (" + str(ISO) + ")")
 parser.add_argument("-N", "--net", dest='NET', type=str, help="Network Interface | None  (" + str(NET) + ")")
-parser.add_argument("-NC", "--netCount", dest='NET', type=str, help="Network Interface Count | None  (" + str(NETCOUNT) + ")")
+parser.add_argument("-NC", "--netCount", dest='NETCOUNT', type=str, help="Network Interface Count | None  (" + str(NETCOUNT) + ")")
 parser.add_argument("-M", "--mac", dest='MAC', type=str, help="MAC address")
 parser.add_argument("-S", "--store", dest='STORE', type=str, help="vmfs Store | LeastUsed  ("  + str(STORE) + ")")
 parser.add_argument("-g", "--guestos", dest='GUESTOS', type=str, help="Guest OS. (" + str(GUESTOS) + ")")
