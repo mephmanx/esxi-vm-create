@@ -52,6 +52,9 @@ def setup_config():
 
         #  Default Network Interface (vswitch)
         NET="None",
+        
+        #Default number of network cards
+        NETCOUNT=1,
 
         #  Default ISO
         ISO="None",
