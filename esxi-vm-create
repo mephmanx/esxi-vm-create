@@ -249,7 +249,6 @@ try:
     (stdin, stdout, stderr) = ssh.exec_command("vim-cmd vmsvc/getallvms | awk '{print $2}'")
     type(stdin)
     for line in stdout.readlines():
-        print line
         if NAME == line:
             print "ERROR: VM " + NAME + " already exists."
             ErrorMessages += " VM " + NAME + " already exists."
