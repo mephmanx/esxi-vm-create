@@ -101,7 +101,7 @@ try:
     type(stdin)
     for line in stdout.readlines():
         splitLine = line.split()
-        if splitLine.size < 2:
+        if len(splitLine) < 2:
             print line
             sys.exit(1)
         if NAME == splitLine[1]:
