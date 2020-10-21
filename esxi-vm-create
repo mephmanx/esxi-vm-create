@@ -364,7 +364,7 @@ VMX.append('pciBridge7.virtualDev = "pcieRootPort"')
 VMX.append('pciBridge7.functions = "8"')
 VMX.append('guestOS = "' + GUESTOS + '"')
 if NET != "None":
-    for NETCOUNT > 0:
+    while NETCOUNT >= 0:
     VMX.append('ethernet' + NETCOUNT + '.virtualDev = "vmxnet3"')
     VMX.append('ethernet' + NETCOUNT + '.present = "TRUE"')
     VMX.append('ethernet' + NETCOUNT + '.networkName = "' + NET + '"')
