@@ -447,10 +447,12 @@ if not isDryRun and not CheckHasErrors:
 
         # Get Generated MAC
         if NET != "None":
-            (stdin, stdout, stderr) = ssh.exec_command(
-                "grep -i 'ethernet0.*ddress = ' " + MyVM + ".vmx |tail -1|awk '{print $NF}'")
-            type(stdin)
-            GeneratedMAC = str(stdout.readlines()[0]).strip('\n"')
+            while NETCOUNT > 0:
+                (stdin, stdout, stderr) = ssh.exec_command(
+                    "grep -i 'ethernet' + NETCOUNT + '.*ddress = ' " + MyVM + ".vmx |tail -1|awk '{print $NF}'")
+                type(stdin)
+                GeneratedMAC += str(stdout.readlines()[0]).strip('\n"')
+                NETCOUNT-=1
 
     except Exception as e:
         traceback.print_exc()
