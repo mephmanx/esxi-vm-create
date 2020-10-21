@@ -373,7 +373,7 @@ if NET != "None":
         else:
             VMX.append('ethernet' + NETCOUNT + '.addressType = "static"')
             VMX.append('ethernet' + NETCOUNT + '.address = "' + MAC + '"')
-        NETCOUNT--
+        NETCOUNT-=1
 
 #
 #   Merge extra VMX options
