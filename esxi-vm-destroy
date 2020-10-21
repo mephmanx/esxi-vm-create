@@ -122,7 +122,7 @@ except Exception as e:
 
 #  Get List of Volumes, 
 try:
-    (stdin, stdout, stderr) = ssh.exec_command("esxcli storage filesystem list |grep '/vmfs/volumes/.*true  VMFS' |sort -nk7")
+    (stdin, stdout, stderr) = ssh.exec_command("esxcli storage filesystem list |grep '/vmfs/volumes/.*true' |sort -nk7")
     type(stdin)
     VOLUMES = {}
     for line in stdout.readlines():
