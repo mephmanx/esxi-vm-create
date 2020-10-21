@@ -97,7 +97,7 @@ except:
 #
 VMID = -1
 try:
-    (stdin, stdout, stderr) = ssh.exec_command("vim-cmd vmsvc/getallvms")
+    (stdin, stdout, stderr) = ssh.exec_command("vim-cmd vmsvc/getallvms  | awk '{print $1,$2,$3,$4}'")
     type(stdin)
     for line in stdout.readlines():
         splitLine = line.split()
