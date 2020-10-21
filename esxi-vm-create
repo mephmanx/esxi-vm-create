@@ -364,14 +364,16 @@ VMX.append('pciBridge7.virtualDev = "pcieRootPort"')
 VMX.append('pciBridge7.functions = "8"')
 VMX.append('guestOS = "' + GUESTOS + '"')
 if NET != "None":
-    VMX.append('ethernet0.virtualDev = "vmxnet3"')
-    VMX.append('ethernet0.present = "TRUE"')
-    VMX.append('ethernet0.networkName = "' + NET + '"')
+    for NETCOUNT > 0:
+    VMX.append('ethernet' + NETCOUNT + '.virtualDev = "vmxnet3"')
+    VMX.append('ethernet' + NETCOUNT + '.present = "TRUE"')
+    VMX.append('ethernet' + NETCOUNT + '.networkName = "' + NET + '"')
     if MAC == "":
-        VMX.append('ethernet0.addressType = "generated"')
+        VMX.append('ethernet' + NETCOUNT + '.addressType = "generated"')
     else:
-        VMX.append('ethernet0.addressType = "static"')
-        VMX.append('ethernet0.address = "' + MAC + '"')
+        VMX.append('ethernet' + NETCOUNT + '.addressType = "static"')
+        VMX.append('ethernet' + NETCOUNT + '.address = "' + MAC + '"')
+    NETCOUNT--
 
 #
 #   Merge extra VMX options
