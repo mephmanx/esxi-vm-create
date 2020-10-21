@@ -10,6 +10,7 @@ import re                         # For regex
 import paramiko                   # For remote ssh
 import yaml
 import warnings
+import traceback
 
 from esxi_vm_functions import *
 
@@ -111,7 +112,8 @@ try:
         ErrorMessages += " VM " + NAME + " doesn't exists."
         CheckHasErrors = True
         CheckHasWarnings = True
-except:
+except Exception as e:
+        traceback.print_exc()
         print "The Error is " + str(sys.exc_info()[0])
         sys.exit(1)
 
