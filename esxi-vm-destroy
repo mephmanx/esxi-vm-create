@@ -101,6 +101,7 @@ try:
     type(stdin)
     for line in stdout.readlines():
         splitLine = line.split()
+        print splitLine
         if len(splitLine) < 2:
             print line
             sys.exit(1)
