@@ -293,7 +293,7 @@ if DSSTORE not in V:
 
 #  Check NIC  (NIC record)
 if ',' in NET:
-    splitLine = NET.split(',|\n', line)
+    splitLine = re.split(',|\n', NET)
     for nic in splitLine:
         if (nic not in VMNICS) and (nic != "None"):
             print "ERROR: Virtual NIC " + nic + " doesn't exist."
