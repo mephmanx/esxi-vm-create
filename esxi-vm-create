@@ -301,7 +301,7 @@ if ',' in NET:
             ErrorMessages += " Virtual NIC " + nic + " doesn't exist."
             CheckHasErrors = True
             
-     NETCOUNT = len(splitLine)
+    NETCOUNT = len(splitLine)
 else:
     if (NET not in VMNICS) and (NET != "None"):
         print "ERROR: Virtual NIC " + NET + " doesn't exist."
