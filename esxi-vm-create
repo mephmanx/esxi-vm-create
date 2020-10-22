@@ -300,12 +300,16 @@ if ',' in NET:
             print "    Available VM NICs: " + str([str(item) for item in VMNICS]) + " or 'None'"
             ErrorMessages += " Virtual NIC " + nic + " doesn't exist."
             CheckHasErrors = True
+            
+     NETCOUNT = len(splitLine)
 else:
     if (NET not in VMNICS) and (NET != "None"):
         print "ERROR: Virtual NIC " + NET + " doesn't exist."
         print "    Available VM NICs: " + str([str(item) for item in VMNICS]) + " or 'None'"
         ErrorMessages += " Virtual NIC " + NET + " doesn't exist."
         CheckHasErrors = True
+        
+    NETCOUNT = 1
 
 #  Check ISO exists
 if ISO != "" and not ISOfound:
