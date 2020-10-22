@@ -373,7 +373,7 @@ VMX.append('pciBridge7.virtualDev = "pcieRootPort"')
 VMX.append('pciBridge7.functions = "8"')
 VMX.append('guestOS = "' + GUESTOS + '"')
 if NET != "None":
-    splitLines = re.split(',|\n', line)
+    splitLines = re.split(',|\n', NET)
     while NETCOUNT > 0:
         VMX.append('ethernet' + str(NETCOUNT) + '.virtualDev = "vmxnet3"')
         VMX.append('ethernet' + str(NETCOUNT) + '.present = "TRUE"')
