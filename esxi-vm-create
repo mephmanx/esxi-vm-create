@@ -292,11 +292,20 @@ if DSSTORE not in V:
     CheckHasErrors = True
 
 #  Check NIC  (NIC record)
-if (NET not in VMNICS) and (NET != "None"):
-    print "ERROR: Virtual NIC " + NET + " doesn't exist."
-    print "    Available VM NICs: " + str([str(item) for item in VMNICS]) + " or 'None'"
-    ErrorMessages += " Virtual NIC " + NET + " doesn't exist."
-    CheckHasErrors = True
+if ',' in NET:
+    splitLine = NET.split(',|\n', line)
+    for nic in splitLine:
+        if (nic not in VMNICS) and (nic != "None"):
+            print "ERROR: Virtual NIC " + nic + " doesn't exist."
+            print "    Available VM NICs: " + str([str(item) for item in VMNICS]) + " or 'None'"
+            ErrorMessages += " Virtual NIC " + nic + " doesn't exist."
+            CheckHasErrors = True
+else:
+    if (NET not in VMNICS) and (NET != "None"):
+        print "ERROR: Virtual NIC " + NET + " doesn't exist."
+        print "    Available VM NICs: " + str([str(item) for item in VMNICS]) + " or 'None'"
+        ErrorMessages += " Virtual NIC " + NET + " doesn't exist."
+        CheckHasErrors = True
 
 #  Check ISO exists
 if ISO != "" and not ISOfound:
