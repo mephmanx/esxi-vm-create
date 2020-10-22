@@ -187,7 +187,8 @@ try:
     VMNICS = []
     for line in stdout.readlines():
         splitLine = re.split(',|\n', line)
-        VMNICS.append(splitLine[0])
+        for nic in splitLine:
+            VMNICS.append(nic)
 except Exception as e:
     traceback.print_exc()
     print "The Error is " + str(sys.exc_info()[0])
