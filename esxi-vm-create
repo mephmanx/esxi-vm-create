@@ -91,7 +91,7 @@ if args.CPU:
 if args.mem:
     MEM=int(args.mem)
 if args.HDISK:
-    HDISK=int(args.HDISK)
+    HDISK=args.HDISK
 if args.ISO:
     ISO=args.ISO
 if args.NET:
@@ -275,12 +275,12 @@ if MEM < 1 or MEM > 4080:
 if ',' in HDISK:
     splitLine = re.split(',|\n', HDISK)
     for dk in splitList:
-        if dk < 1 or dk > 63488:
+        if int(dk) < 1 or int(dk) > 63488:
             print "Virtual Disk size " + str(dk) + "GB out of range. [1-63488]."
             ErrorMessages += " Virtual Disk size " + str(dk) + "GB out of range. [1-63488]."
             CheckHasErrors = True
 else:
-    if HDISK < 1 or HDISK > 63488:
+    if int(HDISK) < 1 or int(HDISK) > 63488:
         print "Virtual Disk size " + str(HDISK) + "GB out of range. [1-63488]."
         ErrorMessages += " Virtual Disk size " + str(HDISK) + "GB out of range. [1-63488]."
         CheckHasErrors = True
@@ -457,10 +457,9 @@ if not isDryRun and not CheckHasErrors:
             splitLine = re.split(',|\n', HDISK)
             ct=1
             for dk in splitList:
-                
-                (stdin, stdout, stderr) = ssh.exec_command("vmkfstools -c " + str(dk) + "G -d " + DISKFORMAT + " " + FullPath + "/" + NAME + str(ct) + ".vmdk")
+                (stdin, stdout, stderr) = ssh.exec_command("vmkfstools -c " + dk + "G -d " + DISKFORMAT + " " + FullPath + "/" + NAME + str(ct) + ".vmdk")
         else:
-            (stdin, stdout, stderr) = ssh.exec_command("vmkfstools -c " + str(HDISK) + "G -d " + DISKFORMAT + " " + MyVM + ".vmdk")
+            (stdin, stdout, stderr) = ssh.exec_command("vmkfstools -c " + HDISK + "G -d " + DISKFORMAT + " " + MyVM + ".vmdk")
         type(stdin)
 
         # Register VM
@@ -502,7 +501,7 @@ LogOutput += '"Host":"' + HOST + '",'
 LogOutput += '"Name":"' + NAME + '",'
 LogOutput += '"CPU":"' + str(CPU) + '",'
 LogOutput += '"Mem":"' + str(MEM) + '",'
-LogOutput += '"Hdisk":"' + str(HDISK) + '",'
+LogOutput += '"Hdisk":"' + HDISK + '",'
 LogOutput += '"DiskFormat":"' + DISKFORMAT + '",'
 LogOutput += '"Virtual Device":"' + VIRTDEV + '",'
 LogOutput += '"Store":"' + STORE + '",'
