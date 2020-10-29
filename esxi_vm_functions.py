@@ -52,7 +52,7 @@ def setup_config():
 
         #  Default Network Interface (vswitch)
         NET="None",
-        
+        NETCOUNT=1,
         #  Default ISO
         ISO="None",
 
