@@ -355,11 +355,11 @@ VMX.append('scsi0.virtualDev = "pvscsi"')
 VMX.append('memsize = "' + str(MEM * 1024) + '"')
 if ',' in HDISK:
     splitLine = re.split(',|\n', HDISK)
-    ct=1
+    ct=0
     for dk in splitList:
-        VMX.append('scsi0:0.present = "TRUE"')
-        VMX.append('scsi0:0.fileName = "' + NAME + str(ct) + '.vmdk"')
-        VMX.append('scsi0:0.deviceType = "scsi-hardDisk"')
+        VMX.append('scsi0:' + str(ct) + '.present = "TRUE"')
+        VMX.append('scsi0:' + str(ct) + '.fileName = "' + NAME + str(ct) + '.vmdk"')
+        VMX.append('scsi0:' + str(ct) + '.deviceType = "scsi-hardDisk"')
         ct+=1
 else:
     VMX.append('scsi0:0.present = "TRUE"')
