@@ -272,10 +272,18 @@ if MEM < 1 or MEM > 4080:
     CheckHasErrors = True
 
 #  Check HDISK
-if HDISK < 1 or HDISK > 63488:
-    print "Virtual Disk size " + str(HDISK) + "GB out of range. [1-63488]."
-    ErrorMessages += " Virtual Disk size " + str(HDISK) + "GB out of range. [1-63488]."
-    CheckHasErrors = True
+if ',' in HDISK:
+    splitLine = re.split(',|\n', HDISK)
+    for dk in splitList:
+        if dk < 1 or dk > 63488:
+            print "Virtual Disk size " + str(dk) + "GB out of range. [1-63488]."
+            ErrorMessages += " Virtual Disk size " + str(dk) + "GB out of range. [1-63488]."
+            CheckHasErrors = True
+else:
+    if HDISK < 1 or HDISK > 63488:
+        print "Virtual Disk size " + str(HDISK) + "GB out of range. [1-63488]."
+        ErrorMessages += " Virtual Disk size " + str(HDISK) + "GB out of range. [1-63488]."
+        CheckHasErrors = True
 
 #  Convert STORE to path and visa-versa
 V = []
@@ -345,9 +353,18 @@ VMX.append('scsi0.present = "TRUE"')
 VMX.append('scsi0.sharedBus = "none"')
 VMX.append('scsi0.virtualDev = "pvscsi"')
 VMX.append('memsize = "' + str(MEM * 1024) + '"')
-VMX.append('scsi0:0.present = "TRUE"')
-VMX.append('scsi0:0.fileName = "' + NAME + '.vmdk"')
-VMX.append('scsi0:0.deviceType = "scsi-hardDisk"')
+if ',' in HDISK:
+    splitLine = re.split(',|\n', HDISK)
+    ct=1
+    for dk in splitList:
+        VMX.append('scsi0:0.present = "TRUE"')
+        VMX.append('scsi0:0.fileName = "' + NAME + str(ct) + '.vmdk"')
+        VMX.append('scsi0:0.deviceType = "scsi-hardDisk"')
+        ct+=1
+else:
+    VMX.append('scsi0:0.present = "TRUE"')
+    VMX.append('scsi0:0.fileName = "' + NAME + '.vmdk"')
+    VMX.append('scsi0:0.deviceType = "scsi-hardDisk"')
 if ISO == "":
     VMX.append('ide1:0.present = "TRUE"')
     VMX.append('ide1:0.fileName = "emptyBackingString"')
@@ -436,7 +453,14 @@ if not isDryRun and not CheckHasErrors:
         # Create vmdk
         if isVerbose:
             print "Create " + NAME + ".vmdk file"
-        (stdin, stdout, stderr) = ssh.exec_command("vmkfstools -c " + str(HDISK) + "G -d " + DISKFORMAT + " " + MyVM + ".vmdk")
+        if ',' in HDISK:
+            splitLine = re.split(',|\n', HDISK)
+            ct=1
+            for dk in splitList:
+                
+                (stdin, stdout, stderr) = ssh.exec_command("vmkfstools -c " + str(dk) + "G -d " + DISKFORMAT + " " + FullPath + "/" + NAME + str(ct) + ".vmdk")
+        else:
+            (stdin, stdout, stderr) = ssh.exec_command("vmkfstools -c " + str(HDISK) + "G -d " + DISKFORMAT + " " + MyVM + ".vmdk")
         type(stdin)
 
         # Register VM
