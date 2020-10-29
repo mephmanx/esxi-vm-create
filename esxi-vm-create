@@ -273,7 +273,7 @@ if MEM < 1 or MEM > 4080:
 
 #  Check HDISK
 if ',' in HDISK:
-    splitLine = re.split(',|\n', HDISK)
+    splitList = re.split(',|\n', HDISK)
     for dk in splitList:
         if int(dk) < 1 or int(dk) > 63488:
             print "Virtual Disk size " + str(dk) + "GB out of range. [1-63488]."
