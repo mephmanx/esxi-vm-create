@@ -356,7 +356,7 @@ VMX.append('memsize = "' + str(MEM * 1024) + '"')
 if ',' in HDISK:
     splitLine = re.split(',|\n', HDISK)
     ct=0
-    for dk in splitList:
+    for dk in splitLine:
         VMX.append('scsi0:' + str(ct) + '.present = "TRUE"')
         VMX.append('scsi0:' + str(ct) + '.fileName = "' + NAME + str(ct) + '.vmdk"')
         VMX.append('scsi0:' + str(ct) + '.deviceType = "scsi-hardDisk"')
@@ -458,6 +458,7 @@ if not isDryRun and not CheckHasErrors:
             ct=1
             for dk in splitLine:
                 (stdin, stdout, stderr) = ssh.exec_command("vmkfstools -c " + dk + "G -d " + DISKFORMAT + " " + FullPath + "/" + NAME + str(ct) + ".vmdk")
+                ct+=1
         else:
             (stdin, stdout, stderr) = ssh.exec_command("vmkfstools -c " + HDISK + "G -d " + DISKFORMAT + " " + MyVM + ".vmdk")
         type(stdin)
