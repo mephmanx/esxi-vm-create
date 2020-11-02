@@ -2,12 +2,49 @@
 
 from paramiko import SSHClient
 from scp import SCPClient
+import argparse                   # Argument parser
+
+
+
+#
+#      Process Arguments
+#
+parser = argparse.ArgumentParser(description='ESXi Create VM utility.')
+
+parser.add_argument('-d', '--dry', dest='isDryRunarg', action='store_true', help="Enable Dry Run mode  (" + str(isDryRun) + ")")
+parser.add_argument("-H", "--Host", dest='HOST', type=str, help="ESXi Host/IP  (" + str(HOST) + ")")
+parser.add_argument("-U", "--User", dest='USER', type=str, help="ESXi Host username  (" + str(USER) + ")")
+parser.add_argument("-P", "--Password", dest='PASSWORD', type=str, help="ESXi Host password  (*****)")
+parser.add_argument("-n", "--fileName", dest='FILENAME', type=str, help="File name")
+parser.add_argument("-l", "--location", dest='LOCATION', type=int, help="File Location")
+
+
+
+args = parser.parse_args()
+
+if args.isDryRunarg:
+    isDryRun = True
+if args.isVerbosearg:
+    isVerbose = True
+if args.isSummaryarg:
+    isSummary = True
+if args.HOST:
+   HOST=args.HOST
+if args.USER:
+    USER=args.USER
+if args.PASSWORD:
+    PASSWORD=args.PASSWORD
+if args.FILENAME:
+    FILENAME=args.FILENAME
+if args.LOCATION:
+    LOCATION=args.LOCATION
+
+
 
 ssh = SSHClient()
 ssh.load_system_host_keys()
-HOST=($1)
-ssh.connect("$HOST")
+ssh.connect(HOST)
 
 with SCPClient(ssh.get_transport()) as scp:
-    scp.put("$2")
+    scp.put(FILENAME)
     
