@@ -106,6 +106,6 @@ ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 ssh.connect(HOST, username=USER, password=PASSWORD)
 
 COMMAND =  "running command: " + LOCATION + "/" + FILENAME
-echo "running command: " + COMMAND
+echo "running command: " + str(COMMAND)
 ssh.exec_command(COMMAND)
     
