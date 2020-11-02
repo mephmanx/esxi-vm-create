@@ -4,7 +4,55 @@ from paramiko import SSHClient
 from scp import SCPClient
 import argparse                   # Argument parser
 
+ #
+    #   System wide defaults
+    #
+    ConfigData = dict(
 
+        #   Your logfile
+        LOG= os.path.expanduser("~") + "/esxi-vm.log",
+
+        #  Enable/Disable dryrun by default
+        isDryRun=False,
+
+        #  Enable/Disable Verbose output by default
+        isVerbose=False,
+
+        #  Enable/Disable exit summary by default
+        isSummary=False,
+
+        #  ESXi host/IP, root login & password
+        HOST="esxi",
+        USER="root",
+        PASSWORD="",
+
+        #  Default number of vCPU's, GB Mem, & GB boot disk
+        FILENAME="",
+        LOCATION="",
+        
+    )
+
+NAME = ""
+LOG = ConfigData['LOG']
+isDryRun = ConfigData['isDryRun']
+isVerbose = ConfigData['isVerbose']
+isSummary = ConfigData['isSummary']
+HOST = ConfigData['HOST']
+USER = ConfigData['USER']
+PASSWORD = ConfigData['PASSWORD']
+FILENAME = ConfigData['FILENAME']
+LOCATION = ConfigData['LOCATION']
+
+
+ErrorMessages = ""
+MAC = ""
+GeneratedMAC = ""
+ISOfound = False
+CheckHasErrors = False
+LeastUsedDS = ""
+DSPATH=""
+DSSTORE=""
+FullPathExists = False
 
 #
 #      Process Arguments
