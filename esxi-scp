@@ -1,9 +1,12 @@
 #!/usr/bin/python
 
-from paramiko import SSHClient
-from scp import SCPClient
+
 import os.path                    # To check if file exists
 import argparse                   # Argument parser
+import paramiko                   # For remote ssh
+
+from paramiko import SSHClient
+from scp import SCPClient
 
  #
     #   System wide defaults
