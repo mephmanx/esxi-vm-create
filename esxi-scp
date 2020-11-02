@@ -2,6 +2,7 @@
 
 from paramiko import SSHClient
 from scp import SCPClient
+import os.path                    # To check if file exists
 import argparse                   # Argument parser
 
  #
