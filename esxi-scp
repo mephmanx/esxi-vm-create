@@ -3,8 +3,8 @@ from scp import SCPClient
 
 ssh = SSHClient()
 ssh.load_system_host_keys()
-ssh.connect('example.com')
+ssh.connect($1)
 
 with SCPClient(ssh.get_transport()) as scp:
-    scp.put('test.txt', 'test2.txt')
-    scp.get('test2.txt')
+    scp.put($2)
+    
