@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 from paramiko import SSHClient
 from scp import SCPClient
 
