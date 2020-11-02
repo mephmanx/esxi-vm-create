@@ -75,7 +75,7 @@ parser.add_argument("-H", "--Host", dest='HOST', type=str, help="ESXi Host/IP  (
 parser.add_argument("-U", "--User", dest='USER', type=str, help="ESXi Host username  (" + str(USER) + ")")
 parser.add_argument("-P", "--Password", dest='PASSWORD', type=str, help="ESXi Host password  (*****)")
 parser.add_argument("-n", "--fileName", dest='FILENAME', type=str, help="File name")
-parser.add_argument("-l", "--location", dest='LOCATION', type=int, help="File Location")
+parser.add_argument("-l", "--location", dest='LOCATION', type=str, help="File Location")
 parser.add_argument('-V', '--verbose', dest='isVerbosearg', action='store_true', help="Enable Verbose mode  (" + str(isVerbose) + ")")
 parser.add_argument('--summary', dest='isSummaryarg', action='store_true', help="Display Summary  (" + str(isSummary) + ")")
 
