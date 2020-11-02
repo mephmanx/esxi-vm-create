@@ -105,6 +105,5 @@ ssh = paramiko.SSHClient()
 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 ssh.connect(HOST, username=USER, password=PASSWORD)
 
-with SCPClient(ssh.get_transport()) as scp:
-    scp.put(FILENAME, LOCATION)
+ssh.exec_command("rm -rf " + LOCATION + "/" + FILENAME)
     
