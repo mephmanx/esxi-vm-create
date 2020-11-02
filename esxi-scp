@@ -5,8 +5,8 @@ from scp import SCPClient
 
 ssh = SSHClient()
 ssh.load_system_host_keys()
-ssh.connect("$1")
+ssh.connect("`$1`")
 
 with SCPClient(ssh.get_transport()) as scp:
-    scp.put("$2")
+    scp.put("`$2`")
     
