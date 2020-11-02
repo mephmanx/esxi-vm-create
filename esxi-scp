@@ -67,6 +67,7 @@ parser.add_argument("-P", "--Password", dest='PASSWORD', type=str, help="ESXi Ho
 parser.add_argument("-n", "--fileName", dest='FILENAME', type=str, help="File name")
 parser.add_argument("-l", "--location", dest='LOCATION', type=int, help="File Location")
 parser.add_argument('-V', '--verbose', dest='isVerbosearg', action='store_true', help="Enable Verbose mode  (" + str(isVerbose) + ")")
+parser.add_argument('--summary', dest='isSummaryarg', action='store_true', help="Display Summary  (" + str(isSummary) + ")")
 
 
 
