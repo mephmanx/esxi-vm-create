@@ -4,6 +4,7 @@
 import os.path                    # To check if file exists
 import argparse                   # Argument parser
 import paramiko                   # For remote ssh
+import yaml
 
 from paramiko import SSHClient
 from scp import SCPClient
@@ -32,9 +33,15 @@ ConfigData = dict(
 
         #  Default number of vCPU's, GB Mem, & GB boot disk
         FILENAME="",
-        LOCATION="",
+        LOCATION=""
         
 )
+
+ConfigDataFileLocation = os.path.expanduser("~") + "/.esxi-vm.yml"
+if os.path.exists(ConfigDataFileLocation):
+        FromFileConfigData = yaml.safe_load(open(ConfigDataFileLocation))
+        ConfigData.update(FromFileConfigData)
+
 
 NAME = ""
 LOG = ConfigData['LOG']
