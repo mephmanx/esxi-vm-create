@@ -106,6 +106,6 @@ ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 ssh.connect(HOST, username=USER, password=PASSWORD)
 
 COMMAND =  str("rm -rf ") + str(LOCATION + "/" + FILENAME)
-echo COMMAND
+print COMMAND
 ssh.exec_command(COMMAND)
     
