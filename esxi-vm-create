@@ -57,11 +57,11 @@ parser.add_argument("-P", "--Password", dest='PASSWORD', type=str, help="ESXi Ho
 parser.add_argument("-n", "--name", dest='NAME', type=str, help="VM name")
 parser.add_argument("-c", "--cpu", dest='CPU', type=int, help="Number of vCPUS  (" + str(CPU) + ")")
 parser.add_argument("-m", "--mem", type=int, help="Memory in GB  (" + str(MEM) + ")")
-parser.add_argument("-v", "--vdisk", dest='HDISK', type=str, help="Size of virt hdisk  (" + str(HDISK) + ")")
+parser.add_argument("-v", "--vdisk", dest='HDISK', type=str, help="Volume(String volume name):Size of virt hdisk  (" + str(HDISK) + ")")
 parser.add_argument("-i", "--iso", dest='ISO', type=str, help="CDROM ISO Path | None  (" + str(ISO) + ")")
 parser.add_argument("-N", "--net", dest='NET', type=str, help="Network Interface | None  (" + str(NET) + ")")
 parser.add_argument("-M", "--mac", dest='MAC', type=str, help="MAC address")
-parser.add_argument("-S", "--store", dest='STORE', type=str, help="vmfs Store | LeastUsed  ("  + str(STORE) + ")")
+parser.add_argument("-S", "--store", dest='STORE', type=str, help="vmfs Store for VM definition")
 parser.add_argument("-g", "--guestos", dest='GUESTOS', type=str, help="Guest OS. (" + str(GUESTOS) + ")")
 parser.add_argument("-o", "--options", dest='VMXOPTS', type=str, default='NIL', help="Comma list of VMX Options.")
 parser.add_argument('-V', '--verbose', dest='isVerbosearg', action='store_true', help="Enable Verbose mode  (" + str(isVerbose) + ")")
@@ -100,8 +100,6 @@ if args.MAC:
     MAC=args.MAC
 if args.STORE:
     STORE=args.STORE
-if STORE == "":
-    STORE = "LeastUsed"
 if args.GUESTOS:
     GUESTOS=args.GUESTOS
 if args.VMXOPTS == '' and VMXOPTS != '':
@@ -167,16 +165,11 @@ try:
     VOLUMES = {}
     for line in stdout.readlines():
         splitLine = line.split()
-        VOLUMES[splitLine[0]] = splitLine[1]
-        LeastUsedDS = splitLine[1]
+        VOLUMES[splitLine[1]] = splitLine[0]
 except Exception as e:
     traceback.print_exc()
     print "The Error is " + str(sys.exc_info()[0])
     sys.exit(1)
-
-if STORE == "LeastUsed":
-    STORE = LeastUsedDS
-
 
 #
 #      Get list of Networks available, store in VMNICS
@@ -272,33 +265,64 @@ if MEM < 1 or MEM > 4080:
     CheckHasErrors = True
 
 #  Check HDISK
+stores=[]
 if ',' in HDISK:
     splitList = re.split(',|\n', HDISK)
     for dk in splitList:
-        if int(dk) < 1 or int(dk) > 63488:
-            print "Virtual Disk size " + str(dk) + "GB out of range. [1-63488]."
-            ErrorMessages += " Virtual Disk size " + str(dk) + "GB out of range. [1-63488]."
+        splitDrive = re.split(':', dk)
+        stores.append(splitDrive[0])
+        if int(splitDrive[1]) < 1 or int(splitDrive[1]) > 63488:
+            print "Virtual Disk size " + str(splitDrive[1]) + "GB out of range. [1-63488]."
+            ErrorMessages += " Virtual Disk size " + str(splitDrive[1]) + "GB out of range. [1-63488]."
             CheckHasErrors = True
 else:
-    if int(HDISK) < 1 or int(HDISK) > 63488:
-        print "Virtual Disk size " + str(HDISK) + "GB out of range. [1-63488]."
-        ErrorMessages += " Virtual Disk size " + str(HDISK) + "GB out of range. [1-63488]."
+    splitDrive = re.split(':', dk)
+    stores.append(splitDrive[0])
+    if int(splitDrive[1]) < 1 or int(splitDrive[1]) > 63488:
+        print "Virtual Disk size " + str(splitDrive[1]) + "GB out of range. [1-63488]."
+        ErrorMessages += " Virtual Disk size " + str(splitDrive[1]) + "GB out of range. [1-63488]."
         CheckHasErrors = True
 
 #  Convert STORE to path and visa-versa
-V = []
-for Path in VOLUMES:
-    V.append(VOLUMES[Path])
-    if STORE == Path or STORE == VOLUMES[Path]:
-        DSPATH = Path
-        DSSTORE = VOLUMES[Path]
+fail=""
+for Path in stores:
+    if Path not in VOLUMES:
+        print "ERROR: Disk Storage " + Path + " doesn't exist. "
+        print "    Available Disk Stores: " + str([str(item) for item in VOLUMES])
+        ErrorMessages += " Disk Storage " + Path + " doesn't exist. "
+        CheckHasErrors = True
+        #  Check if DSPATH/NAME aready exists
+        try:
+            FullPath = VOLUMES[Path] + "/" + NAME
+            (stdin, stdout, stderr) = ssh.exec_command("ls -d " + FullPath)
+            type(stdin)
+            if stdout.readlines() and not stderr.readlines():
+                print "ERROR: Directory " + FullPath + " already exists."
+                ErrorMessages += " Directory " + FullPath + " already exists."
+                CheckHasErrors = True
+        except Exception as e:
+            traceback.print_exc()
+            pass
 
-if DSSTORE not in V:
+
+#Check if store exists for VMX location
+if STORE not in VOLUMES:
     print "ERROR: Disk Storage " + STORE + " doesn't exist. "
-    print "    Available Disk Stores: " + str([str(item) for item in V])
-    print "    LeastUsed Disk Store : " + str(LeastUsedDS)
+    print "    Available Disk Stores: " + str([str(item) for item in VOLUMES])
     ErrorMessages += " Disk Storage " + STORE + " doesn't exist. "
     CheckHasErrors = True
+    #  Check if DSPATH/NAME aready exists
+    try:
+        FullPath = VOLUMES[STORE] + "/" + NAME
+        (stdin, stdout, stderr) = ssh.exec_command("ls -d " + FullPath)
+        type(stdin)
+        if stdout.readlines() and not stderr.readlines():
+            print "ERROR: Directory " + FullPath + " already exists."
+            ErrorMessages += " Directory " + FullPath + " already exists."
+            CheckHasErrors = True
+    except Exception as e:
+        traceback.print_exc()
+        pass
 
 #  Check NIC  (NIC record)
 if ',' in NET:
@@ -325,19 +349,6 @@ if ISO != "" and not ISOfound:
     print "ERROR: ISO " + ISO + " not found.  Use full path to ISO"
     ErrorMessages += " ISO " + ISO + " not found.  Use full path to ISO"
     CheckHasErrors = True
-
-#  Check if DSPATH/NAME aready exists
-try:
-    FullPath = DSPATH + "/" + NAME
-    (stdin, stdout, stderr) = ssh.exec_command("ls -d " + FullPath)
-    type(stdin)
-    if stdout.readlines() and not stderr.readlines():
-        print "ERROR: Directory " + FullPath + " already exists."
-        ErrorMessages += " Directory " + FullPath + " already exists."
-        CheckHasErrors = True
-except Exception as e:
-    traceback.print_exc()
-    pass
 
 #
 #      Create the VM
@@ -432,7 +443,7 @@ if isVerbose and VMXOPTS != '':
     for i in VMX:
         print i
 
-MyVM = FullPath + "/" + NAME
+MyVM = VOLUMES[STORE] + "/" + NAME
 if CheckHasErrors:
     Result = "Errors"
 else:
@@ -444,7 +455,7 @@ if not isDryRun and not CheckHasErrors:
         # Create NAME.vmx
         if isVerbose:
             print "Create " + NAME + ".vmx file"
-        (stdin, stdout, stderr) = ssh.exec_command("mkdir " + FullPath )
+        (stdin, stdout, stderr) = ssh.exec_command("mkdir " + MyVM )
         type(stdin)
         for line in VMX:
             (stdin, stdout, stderr) = ssh.exec_command("echo " + line + " >>" + MyVM + ".vmx")
@@ -456,11 +467,14 @@ if not isDryRun and not CheckHasErrors:
         if ',' in HDISK:
             splitLine = re.split(',|\n', HDISK)
             ct=0
+            splitDrive = re.split(":", splitLine)
             for dk in splitLine:
-                (stdin, stdout, stderr) = ssh.exec_command("vmkfstools -c " + dk + "G -d " + DISKFORMAT + " " + FullPath + "/" + NAME + str(ct) + ".vmdk")
+                (stdin, stdout, stderr) = ssh.exec_command("vmkfstools -c " + splitDrive[1] + "G -d " + DISKFORMAT + " " + VOLUMES[splitDrive[0]] + "/" + NAME + str(ct) + ".vmdk")
                 ct+=1
         else:
-            (stdin, stdout, stderr) = ssh.exec_command("vmkfstools -c " + HDISK + "G -d " + DISKFORMAT + " " + MyVM + ".vmdk")
+            splitLine = re.split(',|\n', HDISK)
+            splitDrive = re.split(":", splitLine)
+            (stdin, stdout, stderr) = ssh.exec_command("vmkfstools -c " + splitDrive[1] + "G -d " + DISKFORMAT + " " + VOLUMES[splitDrive[0]] + "/" + MyVM + ".vmdk")
         type(stdin)
 
         # Register VM

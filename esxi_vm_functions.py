@@ -47,8 +47,6 @@ def setup_config():
         #  Virtual Disk device type
         VIRTDEV="pvscsi",
 
-        #  Specify default Disk store to "LeastUsed"
-        STORE="LeastUsed",
 
         #  Default Network Interface (vswitch)
         NET="None",
