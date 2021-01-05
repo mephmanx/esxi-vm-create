@@ -351,99 +351,6 @@ if ISO != "" and not ISOfound:
     ErrorMessages += " ISO " + ISO + " not found.  Use full path to ISO"
     CheckHasErrors = True
 
-#
-#      Create the VM
-#
-VMX = []
-VMX.append('config.version = "8"')
-VMX.append('virtualHW.version = "8"')
-VMX.append('vmci0.present = "TRUE"')
-VMX.append('displayName = "' + NAME + '"')
-VMX.append('floppy0.present = "FALSE"')
-VMX.append('numvcpus = "' + str(CPU) + '"')
-VMX.append('scsi0.present = "TRUE"')
-VMX.append('scsi0.sharedBus = "none"')
-VMX.append('scsi0.virtualDev = "pvscsi"')
-VMX.append('memsize = "' + str(MEM * 1024) + '"')
-if ',' in HDISK:
-    splitLine = re.split(',|\n', HDISK)
-    ct=0
-    for dk in splitLine:
-        VMX.append('scsi0:' + str(ct) + '.present = "TRUE"')
-        VMX.append('scsi0:' + str(ct) + '.fileName = "' + NAME + str(ct) + '.vmdk"')
-        VMX.append('scsi0:' + str(ct) + '.deviceType = "scsi-hardDisk"')
-        ct+=1
-else:
-    VMX.append('scsi0:0.present = "TRUE"')
-    VMX.append('scsi0:0.fileName = "' + NAME + '.vmdk"')
-    VMX.append('scsi0:0.deviceType = "scsi-hardDisk"')
-if ISO == "":
-    VMX.append('ide1:0.present = "TRUE"')
-    VMX.append('ide1:0.fileName = "emptyBackingString"')
-    VMX.append('ide1:0.deviceType = "atapi-cdrom"')
-    VMX.append('ide1:0.startConnected = "FALSE"')
-    VMX.append('ide1:0.clientDevice = "TRUE"')
-else:
-    VMX.append('ide1:0.present = "TRUE"')
-    VMX.append('ide1:0.fileName = "' + ISO + '"')
-    VMX.append('ide1:0.deviceType = "cdrom-image"')
-VMX.append('pciBridge0.present = "TRUE"')
-VMX.append('pciBridge4.present = "TRUE"')
-VMX.append('pciBridge4.virtualDev = "pcieRootPort"')
-VMX.append('pciBridge4.functions = "8"')
-VMX.append('pciBridge5.present = "TRUE"')
-VMX.append('pciBridge5.virtualDev = "pcieRootPort"')
-VMX.append('pciBridge5.functions = "8"')
-VMX.append('pciBridge6.present = "TRUE"')
-VMX.append('pciBridge6.virtualDev = "pcieRootPort"')
-VMX.append('pciBridge6.functions = "8"')
-VMX.append('pciBridge7.present = "TRUE"')
-VMX.append('pciBridge7.virtualDev = "pcieRootPort"')
-VMX.append('pciBridge7.functions = "8"')
-VMX.append('guestOS = "' + GUESTOS + '"')
-if NET != "None":
-    splitLines = re.split(',|\n', NET)
-    while NETCOUNT > 0:
-        VMX.append('ethernet' + str(NETCOUNT) + '.virtualDev = "vmxnet3"')
-        VMX.append('ethernet' + str(NETCOUNT) + '.present = "TRUE"')
-        VMX.append('ethernet' + str(NETCOUNT) + '.networkName = "' + splitLines[NETCOUNT - 1] + '"')
-        if MAC == "":
-            VMX.append('ethernet' + str(NETCOUNT) + '.addressType = "generated"')
-        else:
-            VMX.append('ethernet' + str(NETCOUNT) + '.addressType = "static"')
-            VMX.append('ethernet' + str(NETCOUNT) + '.address = "' + MAC + '"')
-        NETCOUNT-=1
-
-#
-#   Merge extra VMX options
-for VMXopt in VMXOPTS:
-    try:
-        k,v = VMXopt.split("=")
-    except Exception as e:
-        traceback.print_exc()
-        k=""
-        v=""
-    key = k.lstrip().strip()
-    value = v.lstrip().strip()
-    for i in VMX:
-        try:
-            ikey,ivalue = i.split("=")
-        except Exception as e:
-            traceback.print_exc()
-            break
-        if ikey.lstrip().strip().lower() == key.lower():
-            index = VMX.index(i)
-            VMX[index] = ikey + " = " + value
-            break
-    else:
-        if key != '' and value != '':
-            VMX.append(key + " = " + value)
-
-if isVerbose and VMXOPTS != '':
-    print "VMX file:"
-    for i in VMX:
-        print i
-
 MyVM = VOLUMES[STORE] + "/" + NAME
 print "MyVM -> " + MyVM
 if CheckHasErrors:
@@ -454,18 +361,25 @@ else:
 if not isDryRun and not CheckHasErrors:
     try:
 
-        # Create NAME.vmx
-        if isVerbose:
-            print "Create " + NAME + ".vmx file"
-        (stdin, stdout, stderr) = ssh.exec_command("mkdir " + MyVM )
-        type(stdin)
-        for line in VMX:
-            (stdin, stdout, stderr) = ssh.exec_command("echo " + line + " >>" + MyVM + "/" + NAME + ".vmx")
-            type(stdin)
+        #
+        #      Create the VM
+        #
+        VMX = []
+        VMX.append('config.version = "8"')
+        VMX.append('virtualHW.version = "8"')
+        VMX.append('vmci0.present = "TRUE"')
+        VMX.append('displayName = "' + NAME + '"')
+        VMX.append('floppy0.present = "FALSE"')
+        VMX.append('numvcpus = "' + str(CPU) + '"')
+        VMX.append('scsi0.present = "TRUE"')
+        VMX.append('scsi0.sharedBus = "none"')
+        VMX.append('scsi0.virtualDev = "pvscsi"')
+        VMX.append('memsize = "' + str(MEM * 1024) + '"')
 
         # Create vmdk
         if isVerbose:
             print "Create " + NAME + ".vmdk file"
+
         if ',' in HDISK:
             splitLine = re.split(',|\n', HDISK)
             ct=0
@@ -477,6 +391,9 @@ if not isDryRun and not CheckHasErrors:
                 if stderr.readlines() and not stdout.readlines():
                     (stdin, stdout, stderr) = ssh.exec_command("mkdir " + VOLUMES[splitDrive[0]] + "/" + NAME )
 
+                VMX.append('scsi' + str(ct) + ':' + str(ct) + '.present = "TRUE"')
+                VMX.append('scsi' + str(ct) + ':' + str(ct) + '.fileName = "' + VOLUMES[splitDrive[0]] + '/' + NAME  + '/' + NAME + str(ct) + '.vmdk"')
+                VMX.append('scsi' + str(ct) + ':' + str(ct) + '.deviceType = "scsi-hardDisk"')
                 (stdin, stdout, stderr) = ssh.exec_command("vmkfstools -c " + splitDrive[1] + "G -d " + DISKFORMAT + " " + VOLUMES[splitDrive[0]] + "/" + NAME  + "/" + NAME + str(ct) + ".vmdk")
                 type(stdin)
                 time.sleep(10)
@@ -484,8 +401,91 @@ if not isDryRun and not CheckHasErrors:
         else:
             splitLine = re.split(',|\n', HDISK)
             splitDrive = re.split(":", splitLine)
+            VMX.append('scsi0:0.present = "TRUE"')
+            VMX.append('scsi0:0.fileName = "' + NAME + '.vmdk"')
+            VMX.append('scsi0:0.deviceType = "scsi-hardDisk"')
             (stdin, stdout, stderr) = ssh.exec_command("vmkfstools -c " + splitDrive[1] + "G -d " + DISKFORMAT + " " + MyVM + "/" + NAME + ".vmdk")
         type(stdin)
+
+        if ISO == "":
+            VMX.append('ide1:0.present = "TRUE"')
+            VMX.append('ide1:0.fileName = "emptyBackingString"')
+            VMX.append('ide1:0.deviceType = "atapi-cdrom"')
+            VMX.append('ide1:0.startConnected = "FALSE"')
+            VMX.append('ide1:0.clientDevice = "TRUE"')
+        else:
+            VMX.append('ide1:0.present = "TRUE"')
+            VMX.append('ide1:0.fileName = "' + ISO + '"')
+            VMX.append('ide1:0.deviceType = "cdrom-image"')
+        VMX.append('pciBridge0.present = "TRUE"')
+        VMX.append('pciBridge4.present = "TRUE"')
+        VMX.append('pciBridge4.virtualDev = "pcieRootPort"')
+        VMX.append('pciBridge4.functions = "8"')
+        VMX.append('pciBridge5.present = "TRUE"')
+        VMX.append('pciBridge5.virtualDev = "pcieRootPort"')
+        VMX.append('pciBridge5.functions = "8"')
+        VMX.append('pciBridge6.present = "TRUE"')
+        VMX.append('pciBridge6.virtualDev = "pcieRootPort"')
+        VMX.append('pciBridge6.functions = "8"')
+        VMX.append('pciBridge7.present = "TRUE"')
+        VMX.append('pciBridge7.virtualDev = "pcieRootPort"')
+        VMX.append('pciBridge7.functions = "8"')
+        VMX.append('guestOS = "' + GUESTOS + '"')
+        if NET != "None":
+            splitLines = re.split(',|\n', NET)
+            while NETCOUNT > 0:
+                VMX.append('ethernet' + str(NETCOUNT) + '.virtualDev = "vmxnet3"')
+                VMX.append('ethernet' + str(NETCOUNT) + '.present = "TRUE"')
+                VMX.append('ethernet' + str(NETCOUNT) + '.networkName = "' + splitLines[NETCOUNT - 1] + '"')
+                if MAC == "":
+                    VMX.append('ethernet' + str(NETCOUNT) + '.addressType = "generated"')
+                else:
+                    VMX.append('ethernet' + str(NETCOUNT) + '.addressType = "static"')
+                    VMX.append('ethernet' + str(NETCOUNT) + '.address = "' + MAC + '"')
+                NETCOUNT-=1
+
+        #
+        #   Merge extra VMX options
+        for VMXopt in VMXOPTS:
+            try:
+                k,v = VMXopt.split("=")
+            except Exception as e:
+                traceback.print_exc()
+                k=""
+                v=""
+            key = k.lstrip().strip()
+            value = v.lstrip().strip()
+            for i in VMX:
+                try:
+                    ikey,ivalue = i.split("=")
+                except Exception as e:
+                    traceback.print_exc()
+                    break
+                if ikey.lstrip().strip().lower() == key.lower():
+                    index = VMX.index(i)
+                    VMX[index] = ikey + " = " + value
+                    break
+            else:
+                if key != '' and value != '':
+                    VMX.append(key + " = " + value)
+
+        if isVerbose and VMXOPTS != '':
+            print "VMX file:"
+            for i in VMX:
+                print i
+
+
+
+
+
+        # Create NAME.vmx
+        if isVerbose:
+            print "Create " + NAME + ".vmx file"
+        (stdin, stdout, stderr) = ssh.exec_command("mkdir " + MyVM )
+        type(stdin)
+        for line in VMX:
+            (stdin, stdout, stderr) = ssh.exec_command("echo " + line + " >>" + MyVM + "/" + NAME + ".vmx")
+            type(stdin)
 
         # Register VM
         if isVerbose:
