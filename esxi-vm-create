@@ -391,9 +391,9 @@ if not isDryRun and not CheckHasErrors:
                 if stderr.readlines() and not stdout.readlines():
                     (stdin, stdout, stderr) = ssh.exec_command("mkdir " + VOLUMES[splitDrive[0]] + "/" + NAME )
 
-                VMX.append('scsi' + str(ct) + ':' + str(ct) + '.present = "TRUE"')
-                VMX.append('scsi' + str(ct) + ':' + str(ct) + '.fileName = "' + VOLUMES[splitDrive[0]] + '/' + NAME  + '/' + NAME + str(ct) + '.vmdk"')
-                VMX.append('scsi' + str(ct) + ':' + str(ct) + '.deviceType = "scsi-hardDisk"')
+                VMX.append('scsi0:' + str(ct) + '.present = "TRUE"')
+                VMX.append('scsi0:' + str(ct) + '.fileName = "' + VOLUMES[splitDrive[0]] + '/' + NAME  + '/' + NAME + str(ct) + '.vmdk"')
+                VMX.append('scsi0:' + str(ct) + '.deviceType = "scsi-hardDisk"')
                 (stdin, stdout, stderr) = ssh.exec_command("vmkfstools -c " + splitDrive[1] + "G -d " + DISKFORMAT + " " + VOLUMES[splitDrive[0]] + "/" + NAME  + "/" + NAME + str(ct) + ".vmdk")
                 type(stdin)
                 time.sleep(10)
