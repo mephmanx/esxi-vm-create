@@ -277,7 +277,7 @@ if ',' in HDISK:
             ErrorMessages += " Virtual Disk size " + str(splitDrive[1]) + "GB out of range. [1-63488]."
             CheckHasErrors = True
 else:
-    splitDrive = re.split(':', dk)
+    splitDrive = re.split(':', HDISK)
     stores.append(splitDrive[0])
     if int(splitDrive[1]) < 1 or int(splitDrive[1]) > 63488:
         print "Virtual Disk size " + str(splitDrive[1]) + "GB out of range. [1-63488]."
