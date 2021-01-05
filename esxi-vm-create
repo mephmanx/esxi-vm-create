@@ -469,12 +469,12 @@ if not isDryRun and not CheckHasErrors:
             ct=0
             for dk in splitLine:
                 splitDrive = re.split(":", dk)
-                (stdin, stdout, stderr) = ssh.exec_command("vmkfstools -c " + splitDrive[1] + "G -d " + DISKFORMAT + " " + VOLUMES[splitDrive[0]] + "/" + NAME + str(ct) + ".vmdk")
+                (stdin, stdout, stderr) = ssh.exec_command("vmkfstools -c " + splitDrive[1] + "G -d " + DISKFORMAT + " " + VOLUMES[splitDrive[0]] + "/" + NAME  + "/" + NAME + str(ct) + ".vmdk")
                 ct+=1
         else:
             splitLine = re.split(',|\n', HDISK)
             splitDrive = re.split(":", splitLine)
-            (stdin, stdout, stderr) = ssh.exec_command("vmkfstools -c " + splitDrive[1] + "G -d " + DISKFORMAT + " " + VOLUMES[splitDrive[0]] + "/" + MyVM + ".vmdk")
+            (stdin, stdout, stderr) = ssh.exec_command("vmkfstools -c " + splitDrive[1] + "G -d " + DISKFORMAT + " " + MyVM + "/" + NAME + ".vmdk")
         type(stdin)
 
         # Register VM
