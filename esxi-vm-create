@@ -475,7 +475,9 @@ if not isDryRun and not CheckHasErrors:
                 if stderr.readlines() and not stdout.readlines():
                     (stdin, stdout, stderr) = ssh.exec_command("mkdir " + VOLUMES[splitDrive[0]] + "/" + NAME )
                 else:
-                    (stdin, stdout, stderr) = ssh.exec_command("rm -rf " + VOLUMES[splitDrive[0]] + "/" + NAME )
+                    if VOLUMES[STORE] != VOLUMES[splitDrive[0]]:
+                        (stdin, stdout, stderr) = ssh.exec_command("rm -rf " + VOLUMES[splitDrive[0]] + "/" + NAME )
+
                 (stdin, stdout, stderr) = ssh.exec_command("vmkfstools -c " + splitDrive[1] + "G -d " + DISKFORMAT + " " + VOLUMES[splitDrive[0]] + "/" + NAME  + "/" + NAME + str(ct) + ".vmdk")
                 ct+=1
         else:
@@ -489,6 +491,7 @@ if not isDryRun and not CheckHasErrors:
             print "Register VM"
         (stdin, stdout, stderr) = ssh.exec_command("vim-cmd solo/registervm " + MyVM + "/" + NAME + ".vmx")
         type(stdin)
+        print stderr.readLines()
         VMID = int(stdout.readlines()[0])
 
         # Power on VM
