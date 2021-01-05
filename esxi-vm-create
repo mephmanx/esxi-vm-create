@@ -10,6 +10,7 @@ import paramiko                   # For remote ssh
 import yaml
 import warnings
 import traceback
+import time
 
 from esxi_vm_functions import *
 
