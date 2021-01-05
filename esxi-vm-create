@@ -399,8 +399,7 @@ if not isDryRun and not CheckHasErrors:
                 time.sleep(10)
                 ct+=1
         else:
-            splitLine = re.split(',|\n', HDISK)
-            splitDrive = re.split(":", splitLine)
+            splitDrive = re.split(":", HDISK)
             VMX.append('scsi0:0.present = "TRUE"')
             VMX.append('scsi0:0.fileName = "' + NAME + '.vmdk"')
             VMX.append('scsi0:0.deviceType = "scsi-hardDisk"')
