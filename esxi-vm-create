@@ -478,6 +478,7 @@ if not isDryRun and not CheckHasErrors:
                     (stdin, stdout, stderr) = ssh.exec_command("mkdir " + VOLUMES[splitDrive[0]] + "/" + NAME )
 
                 (stdin, stdout, stderr) = ssh.exec_command("vmkfstools -c " + splitDrive[1] + "G -d " + DISKFORMAT + " " + VOLUMES[splitDrive[0]] + "/" + NAME  + "/" + NAME + str(ct) + ".vmdk")
+                type(stdin)
                 time.sleep(10)
                 ct+=1
         else:
