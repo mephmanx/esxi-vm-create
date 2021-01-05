@@ -467,8 +467,8 @@ if not isDryRun and not CheckHasErrors:
         if ',' in HDISK:
             splitLine = re.split(',|\n', HDISK)
             ct=0
-            splitDrive = re.split(":", splitLine)
             for dk in splitLine:
+                splitDrive = re.split(":", dk)
                 (stdin, stdout, stderr) = ssh.exec_command("vmkfstools -c " + splitDrive[1] + "G -d " + DISKFORMAT + " " + VOLUMES[splitDrive[0]] + "/" + NAME + str(ct) + ".vmdk")
                 ct+=1
         else:
