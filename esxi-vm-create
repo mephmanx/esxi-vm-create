@@ -401,10 +401,11 @@ if not isDryRun and not CheckHasErrors:
         else:
             splitDrive = re.split(":", HDISK)
             VMX.append('scsi0:0.present = "TRUE"')
-            VMX.append('scsi0:0.fileName = "' + NAME + '.vmdk"')
+            VMX.append('scsi0:0.fileName = "' + MyVM + "/" + NAME + '.vmdk"')
             VMX.append('scsi0:0.deviceType = "scsi-hardDisk"')
             (stdin, stdout, stderr) = ssh.exec_command("vmkfstools -c " + splitDrive[1] + "G -d " + DISKFORMAT + " " + MyVM + "/" + NAME + ".vmdk")
-        type(stdin)
+            type(stdin)
+            time.sleep(10)
 
         if ISO == "":
             VMX.append('ide1:0.present = "TRUE"')
