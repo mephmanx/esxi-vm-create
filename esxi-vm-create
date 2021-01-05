@@ -470,6 +470,7 @@ if not isDryRun and not CheckHasErrors:
             ct=0
             for dk in splitLine:
                 splitDrive = re.split(":", dk)
+                print "drive loc -> " + VOLUMES[splitDrive[0]] + "/" + NAME
                 (stdin, stdout, stderr) = ssh.exec_command("ls -d " + VOLUMES[splitDrive[0]] + "/" + NAME)
                 type(stdin)
                 if stderr.readlines() and not stdout.readlines():
@@ -491,7 +492,6 @@ if not isDryRun and not CheckHasErrors:
             print "Register VM"
         (stdin, stdout, stderr) = ssh.exec_command("vim-cmd solo/registervm " + MyVM + "/" + NAME + ".vmx")
         type(stdin)
-        print stderr.readLines()
         VMID = int(stdout.readlines()[0])
 
         # Power on VM
