@@ -444,6 +444,7 @@ if isVerbose and VMXOPTS != '':
         print i
 
 MyVM = VOLUMES[STORE] + "/" + NAME
+print "MyVM -> " + MyVM
 if CheckHasErrors:
     Result = "Errors"
 else:
@@ -458,7 +459,7 @@ if not isDryRun and not CheckHasErrors:
         (stdin, stdout, stderr) = ssh.exec_command("mkdir " + MyVM )
         type(stdin)
         for line in VMX:
-            (stdin, stdout, stderr) = ssh.exec_command("echo " + line + " >>" + MyVM + "/" + NAME + "/" + NAME + ".vmx")
+            (stdin, stdout, stderr) = ssh.exec_command("echo " + line + " >>" + MyVM + "/" + NAME + ".vmx")
             type(stdin)
 
         # Create vmdk
