@@ -566,13 +566,12 @@ if isSummary:
     print "VM Disk: " + str(HDISK) + "GB"
     if isVerbose:
         print "Format: " + DISKFORMAT
-    print "DS Store: " + DSSTORE
+    print "DS Store: " + STORE
     print "Network: " + NET
     if ISO:
         print "ISO: " + ISO
     if isVerbose:
         print "Guest OS: " + GUESTOS
-        print "MAC: " + GeneratedMAC
 else:
     pass
 
