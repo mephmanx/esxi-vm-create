@@ -433,16 +433,17 @@ if not isDryRun and not CheckHasErrors:
         VMX.append('guestOS = "' + GUESTOS + '"')
         if NET != "None":
             splitLines = re.split(',|\n', NET)
-            while NETCOUNT > 0:
-                VMX.append('ethernet' + str(NETCOUNT) + '.virtualDev = "vmxnet3"')
-                VMX.append('ethernet' + str(NETCOUNT) + '.present = "TRUE"')
-                VMX.append('ethernet' + str(NETCOUNT) + '.networkName = "' + splitLines[NETCOUNT - 1] + '"')
+            ct1=0
+            while ct1 < NETCOUNT:
+                VMX.append('ethernet' + str(ct1) + '.virtualDev = "vmxnet3"')
+                VMX.append('ethernet' + str(ct1) + '.present = "TRUE"')
+                VMX.append('ethernet' + str(ct1) + '.networkName = "' + splitLines[ct1] + '"')
                 if MAC == "":
-                    VMX.append('ethernet' + str(NETCOUNT) + '.addressType = "generated"')
+                    VMX.append('ethernet' + str(ct1) + '.addressType = "generated"')
                 else:
-                    VMX.append('ethernet' + str(NETCOUNT) + '.addressType = "static"')
-                    VMX.append('ethernet' + str(NETCOUNT) + '.address = "' + MAC + '"')
-                NETCOUNT-=1
+                    VMX.append('ethernet' + str(ct1) + '.addressType = "static"')
+                    VMX.append('ethernet' + str(ct1) + '.address = "' + MAC + '"')
+                ct1=ct1 + 1
 
         #
         #   Merge extra VMX options
