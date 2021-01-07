@@ -510,7 +510,6 @@ if not isDryRun and not CheckHasErrors:
                 (stdin, stdout, stderr) = ssh.exec_command(
                     "grep -i 'ethernet' + NETCOUNT + '.*ddress = ' " + MyVM + ".vmx |tail -1|awk '{print $NF}'")
                 type(stdin)
-                GeneratedMAC += str(stdout.readlines()[0]).strip('\n"')
                 NETCOUNT-=1
 
     except Exception as e:
