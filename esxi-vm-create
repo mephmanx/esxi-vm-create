@@ -475,10 +475,6 @@ if not isDryRun and not CheckHasErrors:
             for i in VMX:
                 print i
 
-
-
-
-
         # Create NAME.vmx
         if isVerbose:
             print "Create " + NAME + ".vmx file"
