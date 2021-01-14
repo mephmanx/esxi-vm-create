@@ -399,6 +399,12 @@ if not isDryRun and not CheckHasErrors:
                 time.sleep(10)
                 ct+=1
         else:
+            print "drive loc -> " + VOLUMES[splitDrive[0]] + "/" + NAME
+            (stdin, stdout, stderr) = ssh.exec_command("ls -d " + VOLUMES[splitDrive[0]] + "/" + NAME)
+            type(stdin)
+            if stderr.readlines() and not stdout.readlines():
+                (stdin, stdout, stderr) = ssh.exec_command("mkdir " + VOLUMES[splitDrive[0]] + "/" + NAME )
+
             splitDrive = re.split(":", HDISK)
             VMX.append('scsi0:0.present = "TRUE"')
             VMX.append('scsi0:0.fileName = "' + VOLUMES[splitDrive[0]] + '/' + NAME + '/' + NAME + '.vmdk"')
