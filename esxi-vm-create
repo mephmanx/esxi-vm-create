@@ -58,7 +58,7 @@ parser.add_argument("-P", "--Password", dest='PASSWORD', type=str, help="ESXi Ho
 parser.add_argument("-n", "--name", dest='NAME', type=str, help="VM name")
 parser.add_argument("-c", "--cpu", dest='CPU', type=int, help="Number of vCPUS  (" + str(CPU) + ")")
 parser.add_argument("-m", "--mem", type=int, help="Memory in GB  (" + str(MEM) + ")")
-parser.add_argument("-v", "--vdisk", dest='HDISK', type=str, help="Volume(String volume name):Size of virt hdisk  (" + str(HDISK) + ")")
+parser.add_argument("-v", "--vdisk", dest='HDISK', type=str, help="Volume(String volume name):Size of virt hdisk  (" + str(HDISK) + ").  Is comma separated")
 parser.add_argument("-i", "--iso", dest='ISO', type=str, help="CDROM ISO Path | None  (" + str(ISO) + ")")
 parser.add_argument("-N", "--net", dest='NET', type=str, help="Network Interface | None  (" + str(NET) + ")")
 parser.add_argument("-M", "--mac", dest='MAC', type=str, help="MAC address")
