@@ -491,21 +491,28 @@ if not isDryRun and not CheckHasErrors:
             (stdin, stdout, stderr) = ssh.exec_command("echo " + line + " >>" + MyVM + "/" + NAME + ".vmx")
             type(stdin)
 
-        # Register VM
-        if isVerbose:
-            print "Register VM"
-        (stdin, stdout, stderr) = ssh.exec_command("vim-cmd solo/registervm " + MyVM + "/" + NAME + ".vmx")
-        type(stdin)
-        VMID = int(stdout.readlines()[0])
 
-        # Power on VM
-        if isVerbose:
-            print "Power ON VM"
-        (stdin, stdout, stderr) = ssh.exec_command("vim-cmd vmsvc/power.on " + str(VMID))
-        type(stdin)
-        if stderr.readlines():
-            print "Error Power.on VM."
-            Result="Fail"
+        Result="Fail"
+        while Result == "Fail":
+            # Register VM
+            if isVerbose:
+                print "Register VM"
+            (stdin, stdout, stderr) = ssh.exec_command("vim-cmd solo/registervm " + MyVM + "/" + NAME + ".vmx")
+            type(stdin)
+            VMID = int(stdout.readlines()[0])
+
+            # Power on VM
+            if isVerbose:
+                print "Power ON VM"
+            (stdin, stdout, stderr) = ssh.exec_command("vim-cmd vmsvc/power.on " + str(VMID))
+            type(stdin)
+            if stderr.readlines():
+                print "Error Power.on VM."
+                Result="Fail"
+            else:
+                Result="Pass"
+
+
 
         # Get Generated MAC
         if NET != "None":
