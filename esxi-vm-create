@@ -508,7 +508,7 @@ if not isDryRun and not CheckHasErrors:
                 (stdin, stdout, stderr) = ssh.exec_command("vim-cmd vmsvc/power.on " + str(VMID))
                 type(stdin)
                 if stderr.readlines():
-                    print "Error Power.on VM."
+                    print "Error Power.on VM." + stderr.readlines()
                     Result="Fail"
                 else:
                     Result="Pass"
