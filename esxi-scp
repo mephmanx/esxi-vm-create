@@ -102,7 +102,7 @@ if args.LOCATION:
     LOCATION=args.LOCATION
 
 print "Preparing to transfer file -> " + FILENAME
-splitLine = re.split('/\b', FILENAME)
+splitLine = re.split('[/\b]', FILENAME)
 Result="Fail"
 while Result == "Fail":
     try:
