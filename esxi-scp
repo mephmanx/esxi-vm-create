@@ -106,8 +106,8 @@ splitLine = re.split('[/\b]', FILENAME)
 Result="Fail"
 while Result == "Fail":
     try:
-        print "Removing file -> " + splitLine[len(splitLine)]
-        (stdin, stdout, stderr) = ssh.exec_command("rm -rf " + LOCATION + "/" + splitLine[len(splitLine)])
+        print "Removing file -> " + splitLine[len(splitLine)-1]
+        (stdin, stdout, stderr) = ssh.exec_command("rm -rf " + LOCATION + "/" + splitLine[len(splitLine)-1])
         print "Transferring -> "
 
         ssh = paramiko.SSHClient()
@@ -117,7 +117,7 @@ while Result == "Fail":
             scp.put(FILENAME, LOCATION)
 
         print "Evaluating transfer status -> "
-        (stdin, stdout, stderr) = ssh.exec_command("ls " + LOCATION + "/" + splitLine[len(splitLine)])
+        (stdin, stdout, stderr) = ssh.exec_command("ls " + LOCATION + "/" + splitLine[len(splitLine)-1])
         type(stdin)
         if stderr.readlines():
             print "Transfer failed, retrying"
