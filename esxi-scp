@@ -101,11 +101,7 @@ if args.FILENAME:
 if args.LOCATION:
     LOCATION=args.LOCATION
 
-
-ssh = paramiko.SSHClient()
-ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-ssh.connect(HOST, username=USER, password=PASSWORD)
-
+print "Preparing to transfer file -> " + FILENAME
 splitLine = re.split('/\b', FILENAME)
 Result="Fail"
 while Result == "Fail":
@@ -113,8 +109,13 @@ while Result == "Fail":
         print "Removing file -> " + splitLine[len(splitLine)]
         (stdin, stdout, stderr) = ssh.exec_command("rm -rf " + LOCATION + "/" + splitLine[len(splitLine)])
         print "Transferring -> "
+
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect(HOST, username=USER, password=PASSWORD)
         with SCPClient(ssh.get_transport()) as scp:
             scp.put(FILENAME, LOCATION)
+
         print "Evaluating transfer status -> "
         (stdin, stdout, stderr) = ssh.exec_command("ls " + LOCATION + "/" + splitLine[len(splitLine)])
         type(stdin)
