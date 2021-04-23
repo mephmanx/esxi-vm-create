@@ -5,6 +5,7 @@ import os.path                    # To check if file exists
 import argparse                   # Argument parser
 import paramiko                   # For remote ssh
 import yaml
+import re                         # For regex
 
 from paramiko import SSHClient
 from scp import SCPClient
