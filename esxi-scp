@@ -106,7 +106,7 @@ ssh = paramiko.SSHClient()
 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 ssh.connect(HOST, username=USER, password=PASSWORD)
 
-splitLine = re.split('/\\', FILENAME)
+splitLine = re.split('/\b', FILENAME)
 Result="Fail"
 while Result == "Fail":
     try:
