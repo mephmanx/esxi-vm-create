@@ -105,6 +105,21 @@ ssh = paramiko.SSHClient()
 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 ssh.connect(HOST, username=USER, password=PASSWORD)
 
-with SCPClient(ssh.get_transport()) as scp:
-    scp.put(FILENAME, LOCATION)
-    
+splitLine = re.split('/\\', FILENAME)
+Result="Fail"
+while Result == "Fail":
+    try:
+        (stdin, stdout, stderr) = ssh.exec_command("rm -rf " + LOCATION + "/" + splitLine[len(splitLine)])
+
+        with SCPClient(ssh.get_transport()) as scp:
+            scp.put(FILENAME, LOCATION)
+
+        (stdin, stdout, stderr) = ssh.exec_command("ls " + LOCATION + "/" + splitLine[len(splitLine)])
+        type(stdin)
+        if stderr.readlines():
+            Result="Fail"
+        else:
+            Result="Pass"
+
+    except:
+        Result="Fail"
