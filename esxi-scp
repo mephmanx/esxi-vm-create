@@ -110,17 +110,19 @@ splitLine = re.split('/\b', FILENAME)
 Result="Fail"
 while Result == "Fail":
     try:
+        print "Removing file -> " + splitLine[len(splitLine)]
         (stdin, stdout, stderr) = ssh.exec_command("rm -rf " + LOCATION + "/" + splitLine[len(splitLine)])
-
+        print "Transferring -> "
         with SCPClient(ssh.get_transport()) as scp:
             scp.put(FILENAME, LOCATION)
-
+        print "Evaluating transfer status -> "
         (stdin, stdout, stderr) = ssh.exec_command("ls " + LOCATION + "/" + splitLine[len(splitLine)])
         type(stdin)
         if stderr.readlines():
+            print "Transfer failed, retrying"
             Result="Fail"
         else:
+            print "Transfer succeeded"
             Result="Pass"
-
     except:
         Result="Fail"
