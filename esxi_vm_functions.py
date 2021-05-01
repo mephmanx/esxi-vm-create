@@ -1,8 +1,9 @@
+import datetime  # For current Date/Time
 import os.path
-import yaml
-import datetime                   # For current Date/Time
-import paramiko                   # For remote ssh
+import sys
 from math import log
+
+import yaml
 
 
 #
@@ -13,14 +14,13 @@ from math import log
 
 
 def setup_config():
-
     #
     #   System wide defaults
     #
     ConfigData = dict(
 
         #   Your logfile
-        LOG= os.path.expanduser("~") + "/esxi-vm.log",
+        LOG=os.path.expanduser("~") + "/esxi-vm.log",
 
         #  Enable/Disable dryrun by default
         isDryRun=False,
@@ -83,6 +83,7 @@ def setup_config():
         sys.exit(1)
     return ConfigData
 
+
 def SaveConfig(ConfigData):
     ConfigDataFileLocation = os.path.expanduser("~") + "/.esxi-vm.yml"
     try:
@@ -103,11 +104,13 @@ def theCurrDateTime():
 
 
 unit_list = zip(['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'], [0, 0, 1, 2, 2, 2])
+
+
 def float2human(num):
     """Integer to Human readable"""
     if num > 1:
         exponent = min(int(log(float(num), 1024)), len(unit_list) - 1)
-        quotient = float(num) / 1024**exponent
+        quotient = float(num) / 1024 ** exponent
         unit, num_decimals = unit_list[exponent]
         format_string = '{:.%sf} {}' % (num_decimals)
         return format_string.format(quotient, unit)

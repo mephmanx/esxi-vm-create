@@ -1,47 +1,44 @@
 #!/usr/bin/python
 
 
-import os.path                    # To check if file exists
-import argparse                   # Argument parser
-import paramiko                   # For remote ssh
+import argparse  # Argument parser
+import os.path  # To check if file exists
+
+import paramiko  # For remote ssh
 import yaml
 
-from paramiko import SSHClient
-from scp import SCPClient
-
- #
-    #   System wide defaults
-    #
+#
+#   System wide defaults
+#
 ConfigData = dict(
 
-        #   Your logfile
-        LOG= os.path.expanduser("~") + "/esxi-vm.log",
+    #   Your logfile
+    LOG=os.path.expanduser("~") + "/esxi-vm.log",
 
-        #  Enable/Disable dryrun by default
-        isDryRun=False,
+    #  Enable/Disable dryrun by default
+    isDryRun=False,
 
-        #  Enable/Disable Verbose output by default
-        isVerbose=False,
+    #  Enable/Disable Verbose output by default
+    isVerbose=False,
 
-        #  Enable/Disable exit summary by default
-        isSummary=False,
+    #  Enable/Disable exit summary by default
+    isSummary=False,
 
-        #  ESXi host/IP, root login & password
-        HOST="esxi",
-        USER="root",
-        PASSWORD="",
+    #  ESXi host/IP, root login & password
+    HOST="esxi",
+    USER="root",
+    PASSWORD="",
 
-        #  Default number of vCPU's, GB Mem, & GB boot disk
-        FILENAME="",
-        LOCATION=""
-        
+    #  Default number of vCPU's, GB Mem, & GB boot disk
+    FILENAME="",
+    LOCATION=""
+
 )
 
 ConfigDataFileLocation = os.path.expanduser("~") + "/.esxi-vm.yml"
 if os.path.exists(ConfigDataFileLocation):
-        FromFileConfigData = yaml.safe_load(open(ConfigDataFileLocation))
-        ConfigData.update(FromFileConfigData)
-
+    FromFileConfigData = yaml.safe_load(open(ConfigDataFileLocation))
+    ConfigData.update(FromFileConfigData)
 
 NAME = ""
 LOG = ConfigData['LOG']
@@ -54,15 +51,14 @@ PASSWORD = ConfigData['PASSWORD']
 FILENAME = ConfigData['FILENAME']
 LOCATION = ConfigData['LOCATION']
 
-
 ErrorMessages = ""
 MAC = ""
 GeneratedMAC = ""
 ISOfound = False
 CheckHasErrors = False
 LeastUsedDS = ""
-DSPATH=""
-DSSTORE=""
+DSPATH = ""
+DSSTORE = ""
 FullPathExists = False
 
 #
@@ -70,16 +66,17 @@ FullPathExists = False
 #
 parser = argparse.ArgumentParser(description='ESXi SCP utility.')
 
-parser.add_argument('-d', '--dry', dest='isDryRunarg', action='store_true', help="Enable Dry Run mode  (" + str(isDryRun) + ")")
+parser.add_argument('-d', '--dry', dest='isDryRunarg', action='store_true',
+                    help="Enable Dry Run mode  (" + str(isDryRun) + ")")
 parser.add_argument("-H", "--Host", dest='HOST', type=str, help="ESXi Host/IP  (" + str(HOST) + ")")
 parser.add_argument("-U", "--User", dest='USER', type=str, help="ESXi Host username  (" + str(USER) + ")")
 parser.add_argument("-P", "--Password", dest='PASSWORD', type=str, help="ESXi Host password  (*****)")
 parser.add_argument("-n", "--fileName", dest='FILENAME', type=str, help="File name")
 parser.add_argument("-l", "--location", dest='LOCATION', type=str, help="File Location")
-parser.add_argument('-V', '--verbose', dest='isVerbosearg', action='store_true', help="Enable Verbose mode  (" + str(isVerbose) + ")")
-parser.add_argument('--summary', dest='isSummaryarg', action='store_true', help="Display Summary  (" + str(isSummary) + ")")
-
-
+parser.add_argument('-V', '--verbose', dest='isVerbosearg', action='store_true',
+                    help="Enable Verbose mode  (" + str(isVerbose) + ")")
+parser.add_argument('--summary', dest='isSummaryarg', action='store_true',
+                    help="Display Summary  (" + str(isSummary) + ")")
 
 args = parser.parse_args()
 
@@ -90,21 +87,19 @@ if args.isVerbosearg:
 if args.isSummaryarg:
     isSummary = True
 if args.HOST:
-   HOST=args.HOST
+    HOST = args.HOST
 if args.USER:
-    USER=args.USER
+    USER = args.USER
 if args.PASSWORD:
-    PASSWORD=args.PASSWORD
+    PASSWORD = args.PASSWORD
 if args.FILENAME:
-    FILENAME=args.FILENAME
+    FILENAME = args.FILENAME
 if args.LOCATION:
-    LOCATION=args.LOCATION
-
+    LOCATION = args.LOCATION
 
 ssh = paramiko.SSHClient()
 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 ssh.connect(HOST, username=USER, password=PASSWORD)
 
-COMMAND =  str("rm -rf ") + str(LOCATION + "/" + FILENAME)
+COMMAND = str("rm -rf ") + str(LOCATION + "/" + FILENAME)
 ssh.exec_command(COMMAND)
-    

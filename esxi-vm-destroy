@@ -1,16 +1,11 @@
 #!/usr/bin/python
 
 
-import argparse                   # Argument parser
-import datetime                   # For current Date/Time
+import argparse  # Argument parser
+import re  # For regex
 import time
-import os.path                    # To check if file exists
-import sys                        # For args
-import re                         # For regex
-import paramiko                   # For remote ssh
-import yaml
-import warnings
 import traceback
+import paramiko  # For remote ssh
 
 from esxi_vm_functions import *
 
