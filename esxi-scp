@@ -8,6 +8,8 @@ import re  # For regex
 import paramiko  # For remote ssh
 import yaml
 
+from scp import SCPClient
+
 #
 #   System wide defaults
 #
