@@ -105,7 +105,7 @@ if args.VMXOPTS and args.VMXOPTS != 'NIL':
 
 
 if args.UPDATE:
-    print "Saving new Defaults to ~/.esxi-vm.yml"
+    print ("Saving new Defaults to ~/.esxi-vm.yml")
     ConfigData['isDryRun'] = isDryRun
     ConfigData['isVerbose'] = isVerbose
     ConfigData['isSummary'] = isSummary
@@ -133,7 +133,7 @@ LogOutput = '{'
 LogOutput += '"datetime":"' + str(theCurrDateTime()) + '",'
 
 if NAME == "":
-    print "ERROR: Missing required option --name"
+    print ("ERROR: Missing required option --name")
     sys.exit(1)
 
 try:
@@ -164,7 +164,7 @@ try:
         VOLUMES[splitLine[1]] = splitLine[0]
 except Exception as e:
     traceback.print_exc()
-    print "The Error is " + str(sys.exc_info()[0])
+    print ("The Error is " + str(sys.exc_info()[0]))
     sys.exit(1)
 
 #
@@ -180,7 +180,7 @@ try:
             VMNICS.append(nic.replace(' ', ''))
 except Exception as e:
     traceback.print_exc()
-    print "The Error is " + str(sys.exc_info()[0])
+    print ("The Error is " + str(sys.exc_info()[0]))
     sys.exit(1)
 
 #
@@ -195,7 +195,7 @@ if MAC != "":
     elif re.compile(MACregex).search("00:50:56:" + MAC):
         MAC="00:50:56:" + MAC.replace("-",":")
     else:
-        print "ERROR: " + MAC + " Invalid MAC address."
+        print ("ERROR: " + MAC + " Invalid MAC address.")
         ErrorMessages += " " + MAC + " Invalid MAC address."
         CheckHasErrors = True
 
@@ -224,7 +224,7 @@ if ISO != "":
 
     except Exception as e:
         traceback.print_exc()
-        print "The Error is " + str(sys.exc_info()[0])
+        print ("The Error is " + str(sys.exc_info()[0]))
         sys.exit(1)
 
 #
@@ -236,12 +236,12 @@ try:
     type(stdin)
     for line in stdout.readlines():
         if NAME == line:
-            print "ERROR: VM " + NAME + " already exists."
+            print ("ERROR: VM " + NAME + " already exists.")
             ErrorMessages += " VM " + NAME + " already exists."
             CheckHasErrors = True
 except Exception as e:
         traceback.print_exc()
-        print "The Error is " + str(sys.exc_info()[0])
+        print ("The Error is " + str(sys.exc_info()[0]))
         sys.exit(1)
 
 #
@@ -250,13 +250,13 @@ except Exception as e:
 
 #  Check CPU
 if CPU < 1 or CPU > 128:
-    print str(CPU) + " CPU out of range. [1-128]."
+    print (str(CPU) + " CPU out of range. [1-128].")
     ErrorMessages += " " + str(CPU) + " CPU out of range. [1-128]."
     CheckHasErrors = True
 
 #  Check MEM
 if MEM < 1 or MEM > 4080:
-    print str(MEM) + "GB Memory out of range. [1-4080]."
+    print (str(MEM) + "GB Memory out of range. [1-4080].")
     ErrorMessages += " " + str(MEM) + "GB Memory out of range. [1-4080]."
     CheckHasErrors = True
 
@@ -268,14 +268,14 @@ if ',' in HDISK:
         splitDrive = re.split(':', dk)
         stores.append(splitDrive[0])
         if int(splitDrive[1]) < 1 or int(splitDrive[1]) > 63488:
-            print "Virtual Disk size " + str(splitDrive[1]) + "GB out of range. [1-63488]."
+            print ("Virtual Disk size " + str(splitDrive[1]) + "GB out of range. [1-63488].")
             ErrorMessages += " Virtual Disk size " + str(splitDrive[1]) + "GB out of range. [1-63488]."
             CheckHasErrors = True
 else:
     splitDrive = re.split(':', HDISK)
     stores.append(splitDrive[0])
     if int(splitDrive[1]) < 1 or int(splitDrive[1]) > 63488:
-        print "Virtual Disk size " + str(splitDrive[1]) + "GB out of range. [1-63488]."
+        print ("Virtual Disk size " + str(splitDrive[1]) + "GB out of range. [1-63488].")
         ErrorMessages += " Virtual Disk size " + str(splitDrive[1]) + "GB out of range. [1-63488]."
         CheckHasErrors = True
 
@@ -283,8 +283,8 @@ else:
 fail=""
 for Path in stores:
     if Path not in VOLUMES:
-        print "ERROR: Disk Storage " + Path + " doesn't exist. "
-        print "    Available Disk Stores: " + str([str(item) for item in VOLUMES])
+        print ("ERROR: Disk Storage " + Path + " doesn't exist. ")
+        print ("    Available Disk Stores: " + str([str(item) for item in VOLUMES]))
         ErrorMessages += " Disk Storage " + Path + " doesn't exist. "
         CheckHasErrors = True
         #  Check if DSPATH/NAME aready exists
@@ -293,7 +293,7 @@ for Path in stores:
             (stdin, stdout, stderr) = ssh.exec_command("ls -d " + FullPath)
             type(stdin)
             if stdout.readlines() and not stderr.readlines():
-                print "ERROR: Directory " + FullPath + " already exists."
+                print ("ERROR: Directory " + FullPath + " already exists.")
                 ErrorMessages += " Directory " + FullPath + " already exists."
                 CheckHasErrors = True
         except Exception as e:
@@ -303,8 +303,8 @@ for Path in stores:
 
 #Check if store exists for VMX location
 if STORE not in VOLUMES:
-    print "ERROR: Disk Storage " + STORE + " doesn't exist. "
-    print "    Available Disk Stores: " + str([str(item) for item in VOLUMES])
+    print ("ERROR: Disk Storage " + STORE + " doesn't exist. ")
+    print ("    Available Disk Stores: " + str([str(item) for item in VOLUMES]))
     ErrorMessages += " Disk Storage " + STORE + " doesn't exist. "
     CheckHasErrors = True
     #  Check if DSPATH/NAME aready exists
@@ -313,7 +313,7 @@ if STORE not in VOLUMES:
         (stdin, stdout, stderr) = ssh.exec_command("ls -d " + FullPath)
         type(stdin)
         if stdout.readlines() and not stderr.readlines():
-            print "ERROR: Directory " + FullPath + " already exists."
+            print ("ERROR: Directory " + FullPath + " already exists.")
             ErrorMessages += " Directory " + FullPath + " already exists."
             CheckHasErrors = True
     except Exception as e:
@@ -325,16 +325,16 @@ if ',' in NET:
     splitLine = re.split(',|\n', NET)
     for nic in splitLine:
         if (nic not in VMNICS) and (nic != "None"):
-            print "ERROR: Virtual NIC " + nic + " doesn't exist."
-            print "    Available VM NICs: " + str([str(item) for item in VMNICS]) + " or 'None'"
+            print ("ERROR: Virtual NIC " + nic + " doesn't exist.")
+            print ("    Available VM NICs: " + str([str(item) for item in VMNICS]) + " or 'None'")
             ErrorMessages += " Virtual NIC " + nic + " doesn't exist."
             CheckHasErrors = True
             
     NETCOUNT = len(splitLine)
 else:
     if (NET not in VMNICS) and (NET != "None"):
-        print "ERROR: Virtual NIC " + NET + " doesn't exist."
-        print "    Available VM NICs: " + str([str(item) for item in VMNICS]) + " or 'None'"
+        print ("ERROR: Virtual NIC " + NET + " doesn't exist.")
+        print ("    Available VM NICs: " + str([str(item) for item in VMNICS]) + " or 'None'")
         ErrorMessages += " Virtual NIC " + NET + " doesn't exist."
         CheckHasErrors = True
         
@@ -342,12 +342,12 @@ else:
 
 #  Check ISO exists
 if ISO != "" and not ISOfound:
-    print "ERROR: ISO " + ISO + " not found.  Use full path to ISO"
+    print ("ERROR: ISO " + ISO + " not found.  Use full path to ISO")
     ErrorMessages += " ISO " + ISO + " not found.  Use full path to ISO"
     CheckHasErrors = True
 
 MyVM = VOLUMES[STORE] + "/" + NAME
-print "MyVM -> " + MyVM
+print ("MyVM -> " + MyVM)
 if CheckHasErrors:
     Result = "Errors"
 else:
@@ -373,14 +373,14 @@ if not isDryRun and not CheckHasErrors:
 
         # Create vmdk
         if isVerbose:
-            print "Create " + NAME + ".vmdk file"
+            print ("Create " + NAME + ".vmdk file")
 
         if ',' in HDISK:
             splitLine = re.split(',|\n', HDISK)
             ct=0
             for dk in splitLine:
                 splitDrive = re.split(":", dk)
-                print "drive loc -> " + VOLUMES[splitDrive[0]] + "/" + NAME
+                print ("drive loc -> " + VOLUMES[splitDrive[0]] + "/" + NAME)
                 (stdin, stdout, stderr) = ssh.exec_command("ls -d " + VOLUMES[splitDrive[0]] + "/" + NAME)
                 type(stdin)
                 if stderr.readlines() and not stdout.readlines():
@@ -394,7 +394,7 @@ if not isDryRun and not CheckHasErrors:
                 time.sleep(10)
                 ct+=1
         else:
-            print "drive loc -> " + VOLUMES[splitDrive[0]] + "/" + NAME
+            print ("drive loc -> " + VOLUMES[splitDrive[0]] + "/" + NAME)
             (stdin, stdout, stderr) = ssh.exec_command("ls -d " + VOLUMES[splitDrive[0]] + "/" + NAME)
             type(stdin)
             if stderr.readlines() and not stdout.readlines():
@@ -404,7 +404,7 @@ if not isDryRun and not CheckHasErrors:
             VMX.append('scsi0:0.present = "TRUE"')
             VMX.append('scsi0:0.fileName = "' + VOLUMES[splitDrive[0]] + '/' + NAME + '/' + NAME + '.vmdk"')
             VMX.append('scsi0:0.deviceType = "scsi-hardDisk"')
-            print "drive -> " + VOLUMES[splitDrive[0]] + "/" + NAME + "/" + NAME + ".vmdk"
+            print ("drive -> " + VOLUMES[splitDrive[0]] + "/" + NAME + "/" + NAME + ".vmdk")
             (stdin, stdout, stderr) = ssh.exec_command("vmkfstools -c " + splitDrive[1] + "G -d " + DISKFORMAT + " " + VOLUMES[splitDrive[0]] + "/" + NAME + "/" + NAME + ".vmdk")
             type(stdin)
             time.sleep(10)
@@ -473,13 +473,13 @@ if not isDryRun and not CheckHasErrors:
                     VMX.append(key + " = " + value)
 
         if isVerbose and VMXOPTS != '':
-            print "VMX file:"
+            print ("VMX file:")
             for i in VMX:
                 print i
 
         # Create NAME.vmx
         if isVerbose:
-            print "Create " + NAME + ".vmx file"
+            print ("Create " + NAME + ".vmx file")
         (stdin, stdout, stderr) = ssh.exec_command("mkdir " + MyVM )
         type(stdin)
 
@@ -492,18 +492,18 @@ if not isDryRun and not CheckHasErrors:
                     type(stdin)
                 # Register VM
                 if isVerbose:
-                    print "Register VM"
+                    print ("Register VM")
                 (stdin, stdout, stderr) = ssh.exec_command("vim-cmd solo/registervm " + MyVM + "/" + NAME + ".vmx")
                 type(stdin)
                 VMID = int(stdout.readlines()[0])
 
                 # Power on VM
                 if isVerbose:
-                    print "Power ON VM"
+                    print ("Power ON VM")
                 (stdin, stdout, stderr) = ssh.exec_command("vim-cmd vmsvc/power.on " + str(VMID))
                 type(stdin)
                 if stderr.readlines():
-                    print "Error Power.on VM."
+                    print ("Error Power.on VM.")
                     (stdin, stdout, stderr) = ssh.exec_command("vim-cmd vmsvc/unregister " + str(VMID))
                     Result="Fail"
                 else:
@@ -522,7 +522,7 @@ if not isDryRun and not CheckHasErrors:
 
     except Exception as e:
         traceback.print_exc()
-        print "There was an error creating the VM."
+        print ("There was an error creating the VM.")
         ErrorMessages += " There was an error creating the VM."
         Result = "Fail"
 
@@ -558,38 +558,38 @@ try:
         FD.write(LogOutput)
 except Exception as e:
     traceback.print_exc()
-    print "Error writing to log file: " + LOG
+    print ("Error writing to log file: " + LOG)
 
 if isSummary:
     if isDryRun:
-        print "\nDry Run summary:"
+        print ("\nDry Run summary:")
     else:
-        print "\nCreate VM Success:"
+        print ("\nCreate VM Success:")
 
     if isVerbose:
-        print "ESXi Host: " + HOST
-    print "VM NAME: " + NAME
-    print "vCPU: " + str(CPU)
-    print "Memory: " + str(MEM) + "GB"
-    print "VM Disk: " + str(HDISK) + "GB"
+        print "ESXi Host: " + HOST)
+    print ("VM NAME: " + NAME0
+    print ("vCPU: " + str(CPU))
+    print ("Memory: " + str(MEM) + "GB")
+    print ("VM Disk: " + str(HDISK) + "GB")
     if isVerbose:
-        print "Format: " + DISKFORMAT
-    print "DS Store: " + STORE
-    print "Network: " + NET
+        print ("Format: " + DISKFORMAT)
+    print ("DS Store: " + STORE)
+    print ("Network: " + NET0)
     if ISO:
-        print "ISO: " + ISO
+        print ("ISO: " + ISO)
     if isVerbose:
-        print "Guest OS: " + GUESTOS
+        print ("Guest OS: " + GUESTOS)
 else:
     pass
 
 if CheckHasErrors:
     if isDryRun:
-        print "Dry Run: Failed."
+        print ("Dry Run: Failed.")
     sys.exit(1)
 else:
     if isDryRun:
-        print "Dry Run: Success."
+        print ("Dry Run: Success.")
     else:
         print GeneratedMAC
     sys.exit(0)
