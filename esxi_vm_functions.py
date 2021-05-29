@@ -77,9 +77,9 @@ def setup_config():
             yaml.dump(ConfigData, FD, default_flow_style=False)
         FD.close()
     except:
-        print "Unable to create/update config file " + ConfigDataFileLocation
+        print ("Unable to create/update config file " + ConfigDataFileLocation)
         e = sys.exc_info()[0]
-        print "The Error is " + str(e)
+        print ("The Error is " + str(e))
         sys.exit(1)
     return ConfigData
 
@@ -91,9 +91,9 @@ def SaveConfig(ConfigData):
             yaml.dump(ConfigData, FD, default_flow_style=False)
         FD.close()
     except:
-        print "Unable to create/update config file " + ConfigDataFileLocation
+        print ("Unable to create/update config file " + ConfigDataFileLocation)
         e = sys.exc_info()[0]
-        print "The Error is " + str(e)
+        print ("The Error is " + str(e))
         return 1
     return 0
 
