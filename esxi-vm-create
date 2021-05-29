@@ -568,7 +568,7 @@ if isSummary:
 
     if isVerbose:
         print ("ESXi Host: " + HOST)
-    print ("VM NAME: " + NAME0
+    print ("VM NAME: " + NAME0)
     print ("vCPU: " + str(CPU))
     print ("Memory: " + str(MEM) + "GB")
     print ("VM Disk: " + str(HDISK) + "GB")
