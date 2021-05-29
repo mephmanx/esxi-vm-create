@@ -214,7 +214,7 @@ if ISO != "":
             type(stdin)
             FoundISOPath = str(stdout.readlines()[0]).strip('\n')
             if isVerbose:
-                print "FoundISOPath: " + str(FoundISOPath)
+                print ("FoundISOPath: " + str(FoundISOPath))
             ISO = str(FoundISOPath)
 
         (stdin, stdout, stderr) = ssh.exec_command("ls " + str(ISO))
