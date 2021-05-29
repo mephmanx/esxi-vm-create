@@ -97,7 +97,7 @@ try:
     for line in stdout.readlines():
         splitLine = line.split()
         if len(splitLine) < 2:
-            print line
+            print (line)
             sys.exit(1)
         if NAME == splitLine[1]:
             VMID = splitLine[0]
