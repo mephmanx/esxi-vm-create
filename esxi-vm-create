@@ -575,7 +575,7 @@ if isSummary:
     if isVerbose:
         print ("Format: " + DISKFORMAT)
     print ("DS Store: " + STORE)
-    print ("Network: " + NET0)
+    print ("Network: " + NET)
     if ISO:
         print ("ISO: " + ISO)
     if isVerbose:
