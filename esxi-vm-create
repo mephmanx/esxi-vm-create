@@ -591,5 +591,5 @@ else:
     if isDryRun:
         print ("Dry Run: Success.")
     else:
-        print GeneratedMAC
+        print (GeneratedMAC)
     sys.exit(0)
