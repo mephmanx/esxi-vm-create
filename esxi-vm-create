@@ -554,7 +554,7 @@ LogOutput += '"Result":"' + Result + '",'
 LogOutput += '"Completion Time":"' + str(theCurrDateTime()) + '"'
 LogOutput += '}\n'
 try:
-    with open(LOG, "a+w") as FD:
+    with open(LOG, "w") as FD:
         FD.write(LogOutput)
 except Exception as e:
     traceback.print_exc()
