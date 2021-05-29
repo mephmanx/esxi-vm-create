@@ -109,14 +109,14 @@ while Result == "Fail":
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(HOST, username=USER, password=PASSWORD)
 
-        print "Removing file -> " + splitLine[len(splitLine) - 1]
+        print ("Removing file -> " + splitLine[len(splitLine) - 1])
         (stdin, stdout, stderr) = ssh.exec_command("rm -rf " + LOCATION + "/" + splitLine[len(splitLine) - 1])
-        print "Transferring -> "
+        print ("Transferring -> ")
 
         with SCPClient(ssh.get_transport()) as scp:
             scp.put(FILENAME, LOCATION)
 
-        print "Evaluating transfer status -> "
+        print ("Evaluating transfer status -> ")
         (stdin, stdout, stderr) = ssh.exec_command("ls " + LOCATION + "/" + splitLine[len(splitLine) - 1])
         type(stdin)
         if stderr.readlines():
