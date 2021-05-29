@@ -69,7 +69,7 @@ LogOutput = '{'
 LogOutput += '"datetime":"' + str(theCurrDateTime()) + '",'
 
 if NAME == "":
-    print "ERROR: Missing required option --name"
+    print ("ERROR: Missing required option --name")
     sys.exit(1)
 
 try:
@@ -80,11 +80,11 @@ try:
     (stdin, stdout, stderr) = ssh.exec_command("esxcli system version get |grep Version")
     type(stdin)
     if re.match("Version", str(stdout.readlines())) is not None:
-        print "Unable to determine if this is a ESXi Host: %s, username: %s" % (HOST, USER)
+        print ("Unable to determine if this is a ESXi Host: %s, username: %s" % (HOST, USER))
         sys.exit(1)
 except:
-    print "The Error is " + str(sys.exc_info()[0])
-    print "Unable to access ESXi Host: %s, username: %s" % (HOST, USER)
+    print ("The Error is " + str(sys.exc_info()[0]))
+    print ("Unable to access ESXi Host: %s, username: %s" % (HOST, USER))
     sys.exit(1)
 
 #
@@ -106,13 +106,13 @@ try:
             VMDIR = splitLine[3]
 
     if VMID == -1:
-        print "Warning: VM " + NAME + " doesn't exists."
+        print ("Warning: VM " + NAME + " doesn't exists.")
         ErrorMessages += " VM " + NAME + " doesn't exists."
         CheckHasErrors = True
         CheckHasWarnings = True
 except Exception as e:
         traceback.print_exc()
-        print "The Error is " + str(sys.exc_info()[0])
+        print ("The Error is " + str(sys.exc_info()[0]))
         sys.exit(1)
 
 #  Get List of Volumes, 
@@ -124,7 +124,7 @@ try:
         splitLine = line.split()
         VOLUMES[splitLine[0]] = splitLine[1]
 except:
-    print "The Error is " + str(sys.exc_info()[0])
+    print ("The Error is " + str(sys.exc_info()[0]))
     sys.exit(1)
 
 
@@ -149,23 +149,23 @@ if not CheckHasErrors:
         CurrentStateCounter = 0
         while CurrentState != "off":
             if isVerbose:
-                print "Get state VM"
+                print ("Get state VM")
             (stdin, stdout, stderr) = ssh.exec_command("vim-cmd vmsvc/power.getstate " + str(VMID))
             type(stdin)
             lines = str(stdout.readlines()) + str(stderr.readlines())
             if isVerbose:
-                print "power.getstate: " + lines
+                print ("power.getstate: " + lines)
             if re.search("Powered off", lines):
                 CurrentState = "off"
 
             # Power off VM
             if isVerbose:
-                print "Power OFF VM"
+                print ("Power OFF VM")
             (stdin, stdout, stderr) = ssh.exec_command("vim-cmd vmsvc/power.off " + str(VMID) + " ||echo")
             type(stdin)
             lines = str(stdout.readlines()) + str(stderr.readlines())
             if isVerbose:
-                print "power.off: " + str(lines)
+                print ("power.off: " + str(lines))
 
             CurrentStateCounter += 1
             if CurrentStateCounter >10:
@@ -174,7 +174,7 @@ if not CheckHasErrors:
 
         # destroy VM
         if isVerbose:
-            print "Destroy VM"
+            print ("Destroy VM")
         (stdin, stdout, stderr) = ssh.exec_command("vim-cmd vmsvc/destroy " + str(VMID))
         type(stdin)
         lines = str(stdout.readlines()) + str(stderr.readlines())
@@ -182,7 +182,7 @@ if not CheckHasErrors:
             print "destroy: " + str(lines)
 
     except:
-        print "There was an error destroying the VM."
+        print ("There was an error destroying the VM.")
         ErrorMessages += " There was an error destroying the VM."
         CheckHasErrors = True
         Result = "Fail"
@@ -204,21 +204,21 @@ try:
     with open(LOG, "a+w") as FD:
         FD.write(LogOutput)
 except:
-    print "Error writing to log file: " + LOG
+    print ("Error writing to log file: " + LOG)
 
 if isSummary:
     if isVerbose:
-        print "ESXi Host: " + HOST
-    print "VM NAME: " + NAME
-    print "Path: " + DSSTORE 
+        print ("ESXi Host: " + HOST)
+    print ("VM NAME: " + NAME)
+    print ("Path: " + DSSTORE) 
 else:
     pass
 
 if CheckHasErrors and not CheckHasWarnings:
-    print "Failed"
+    print ("Failed")
     sys.exit(1)
 else:
-    print "Success"
+    print ("Success")
     sys.exit(0)
 
 
