@@ -144,12 +144,12 @@ try:
     (stdin, stdout, stderr) = ssh.exec_command("esxcli system version get |grep Version")
     type(stdin)
     if re.match("Version", str(stdout.readlines())) is not None:
-        print "Unable to determine if this is a ESXi Host: %s, username: %s" % (HOST, USER)
+        print ("Unable to determine if this is a ESXi Host: %s, username: %s" % (HOST, USER))
         sys.exit(1)
 except Exception as e:
     traceback.print_exc()
-    print "The Error is " + str(sys.exc_info()[0])
-    print "Unable to access ESXi Host: %s, username: %s" % (HOST, USER)
+    print ("The Error is " + str(sys.exc_info()[0]))
+    print ("Unable to access ESXi Host: %s, username: %s" % (HOST, USER))
     sys.exit(1)
 
 #
