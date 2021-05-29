@@ -100,7 +100,7 @@ if args.FILENAME:
 if args.LOCATION:
     LOCATION = args.LOCATION
 
-print "Preparing to transfer file -> " + FILENAME
+print ("Preparing to transfer file -> " + FILENAME)
 splitLine = re.split('[/\b]', FILENAME)
 Result = "Fail"
 while Result == "Fail":
@@ -120,10 +120,10 @@ while Result == "Fail":
         (stdin, stdout, stderr) = ssh.exec_command("ls " + LOCATION + "/" + splitLine[len(splitLine) - 1])
         type(stdin)
         if stderr.readlines():
-            print "Transfer failed, retrying"
+            print ("Transfer failed, retrying")
             Result = "Fail"
         else:
-            print "Transfer succeeded"
+            print ("Transfer succeeded")
             Result = "Pass"
     except:
         Result = "Fail"
